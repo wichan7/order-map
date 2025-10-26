@@ -1,26 +1,21 @@
+import type { Workspace } from "@/app/workspaces/types";
 import { sql } from "@/core/db";
 
-export type Workspace = {
-  id: string;
-  nm: string;
-  createdAt: string;
-};
-
-const selectOneById = async (id: Workspace["id"]) => {
+export const getOneById = async (id: Workspace["id"]) => {
   const result =
     (await sql`SELECT * FROM workspace WHERE id = ${id}`) as Workspace[];
 
   return result[0] ?? null;
 };
 
-const selectOneByNm = async (nm: Workspace["nm"]) => {
+export const getOneByNm = async (nm: Workspace["nm"]) => {
   const result =
     (await sql`SELECT * FROM workspace WHERE nm = ${nm}`) as Workspace[];
 
   return result[0] ?? null;
 };
 
-const insert = async (workspace: Pick<Workspace, "nm">) => {
+export const create = async (workspace: Pick<Workspace, "nm">) => {
   const result = (await sql`
   INSERT INTO workspace (
     nm
@@ -30,5 +25,3 @@ const insert = async (workspace: Pick<Workspace, "nm">) => {
 
   return result[0] ?? null;
 };
-
-export default { selectOneById, selectOneByNm, insert };

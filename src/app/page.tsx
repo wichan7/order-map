@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import workspaceDao from "@/dao/workspaceDao";
+import * as workspaceDao from "@/app/workspaces/dao";
 
 async function handleAction(formData: FormData) {
   "use server";
@@ -8,10 +8,10 @@ async function handleAction(formData: FormData) {
   if (!nm) return;
 
   const id = await (async () => {
-    const workspace = await workspaceDao.selectOneByNm(nm);
+    const workspace = await workspaceDao.getOneByNm(nm);
     if (workspace) return workspace.id;
 
-    const newWorkspace = await workspaceDao.insert({ nm });
+    const newWorkspace = await workspaceDao.create({ nm });
     return newWorkspace?.id;
   })();
   if (!id) return;
@@ -25,7 +25,6 @@ export default function Home() {
       action={handleAction}
       className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black"
     >
-      <h1>Enter Your Workspace</h1>
       <div className="flex gap-2">
         <input
           name="workspaceNm"
@@ -33,7 +32,7 @@ export default function Home() {
           className="border rounded px-3 py-2"
         />
         <button type="submit" className="bg-black text-white px-4 py-2 rounded">
-          GO
+          이동
         </button>
       </div>
     </form>

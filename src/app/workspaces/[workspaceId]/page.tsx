@@ -1,23 +1,13 @@
-import { notFound } from "next/navigation";
-import workspaceDao from "@/dao/workspaceDao";
+import ClientPage from "./ClientPage";
+import * as orderDao from "./orders/dao";
 
-type Props = {
+export default async function WorkspacePage({
+  params,
+}: Readonly<{
   params: Promise<{ workspaceId: string }>;
-};
-
-export default async function WorkspacePage({ params }: Props) {
+}>) {
   const { workspaceId } = await params;
-  if (!workspaceId) {
-    return notFound();
-  }
-  const workspace = await workspaceDao.selectOneById(workspaceId);
-  if (!workspace) {
-    return notFound();
-  }
+  const orders = await orderDao.select(workspaceId);
 
-  return (
-    <main>
-      <p>{JSON.stringify(workspace)}</p>
-    </main>
-  );
+  return <ClientPage workspaceId={workspaceId} orders={orders} />;
 }

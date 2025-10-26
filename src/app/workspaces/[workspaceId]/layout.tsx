@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import * as workspaceDao from "@/app/workspaces/dao";
 
 export default async function WorkspaceLayout({
   children,
@@ -8,6 +10,13 @@ export default async function WorkspaceLayout({
   params: Promise<{ workspaceId: string }>;
 }>) {
   const { workspaceId } = await params;
+  if (!workspaceId) {
+    return notFound();
+  }
+  const workspace = await workspaceDao.getOneById(workspaceId);
+  if (!workspace) {
+    return notFound();
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -15,7 +24,9 @@ export default async function WorkspaceLayout({
       <nav className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-lg font-semibold text-gray-900">Workspace</h1>
+            <h1 className="text-lg font-semibold text-gray-900">
+              {workspace.nm}
+            </h1>
           </div>
 
           {/* 메뉴 */}
@@ -27,10 +38,10 @@ export default async function WorkspaceLayout({
               대시보드
             </Link>
             <Link
-              href={`/workspaces/${workspaceId}/settings`}
+              href={`/workspaces/${workspaceId}/orders`}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
-              설정
+              주문관리
             </Link>
           </div>
         </div>
