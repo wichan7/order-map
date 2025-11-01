@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import type { Order } from "@/features/orders/types";
-import * as orderAction from "../orders/actions";
+import { createOrderAction } from "../orders/actions";
 
 interface Marker extends Order {}
 
@@ -57,7 +57,7 @@ export default function ClientPage({ workspaceId, orders }: Props) {
 
   const handleSubmit = () => {
     if (newMarker) {
-      orderAction.create(newMarker);
+      createOrderAction(newMarker);
       setNewMarker(null);
     }
   };
