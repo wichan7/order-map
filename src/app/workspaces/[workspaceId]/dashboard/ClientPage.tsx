@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
-import { getAddressByLatLng } from "../util";
-import * as orderAction from "./orders/actions";
-import type { Order } from "./orders/types";
+import type { Order } from "@/features/orders/types";
+import * as orderAction from "../orders/actions";
 
 interface Marker extends Order {}
 
@@ -12,6 +11,18 @@ interface Props {
   workspaceId: string;
   orders: Order[];
 }
+
+const getAddressByLatLng = (lat: number, lng: number) => {
+  return new Promise<{
+    address: kakao.maps.services.Address;
+    road_address: kakao.maps.services.RoadAaddress | null;
+  } | null>((res) => {
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.coord2Address(lng, lat, (addresses) => {
+      res(addresses[0] ?? null);
+    });
+  });
+};
 
 export default function ClientPage({ workspaceId, orders }: Props) {
   const [markers, setMarkers] = useState<Marker[]>([]);
@@ -85,7 +96,7 @@ export default function ClientPage({ workspaceId, orders }: Props) {
               {newMarker.address || "결과 없음"}
               {newMarker.address && (
                 <form onSubmit={handleSubmit} className="flex gap-6">
-                  <button type="button">적용</button>
+                  <button type="submit">적용</button>
                   <button type="button" onClick={handleCancel}>
                     취소
                   </button>

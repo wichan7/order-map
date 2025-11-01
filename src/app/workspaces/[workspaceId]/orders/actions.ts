@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import * as orderDao from "./dao";
-import type { Order } from "./types";
+import * as orderDao from "@/features/orders/dao";
+import type { Order } from "@/features/orders/types";
 
 export const create = async (
   order: Omit<Order, "status" | "id" | "created_at" | "updated_at">,
