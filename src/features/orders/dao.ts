@@ -1,5 +1,5 @@
-import type { Order } from "@/app/workspaces/[workspaceId]/orders/types";
 import { sql } from "@/core/db";
+import type { Order } from "@/features/orders/types";
 
 export const select = async (workspaceId: string) => {
   return (await sql`SELECT * FROM "order" WHERE workspace_id = ${workspaceId}`) as Order[];

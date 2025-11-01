@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import * as workspaceDao from "@/app/workspaces/dao";
+import * as workspaceDao from "@/features/workspaces/dao";
 
 async function handleAction(formData: FormData) {
   "use server";

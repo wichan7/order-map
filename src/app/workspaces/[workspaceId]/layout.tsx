@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import * as workspaceDao from "@/app/workspaces/dao";
+import * as workspaceDao from "@/features/workspaces/dao";
 
 export default async function WorkspaceLayout({
   children,
@@ -32,7 +32,7 @@ export default async function WorkspaceLayout({
           {/* 메뉴 */}
           <div className="flex items-center gap-6">
             <Link
-              href={`/workspaces/${workspaceId}`}
+              href={`/workspaces/${workspaceId}/dashboard`}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
               대시보드

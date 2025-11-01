@@ -1,5 +1,5 @@
+import * as orderDao from "../../../../features/orders/dao";
 import ClientPage from "./ClientPage";
-import * as orderDao from "./orders/dao";
 
 export default async function WorkspacePage({
   params,
