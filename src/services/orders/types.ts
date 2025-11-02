@@ -1,6 +1,6 @@
 export type Order = {
   id?: string;
-  workspaceId: string;
+  workspace_id: string;
   lat: number;
   lng: number;
   phone?: string;

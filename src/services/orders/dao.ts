@@ -15,13 +15,15 @@ export const insert = async (
     lng,
     address,
     address_road,
-    memo
+    memo,
+    phone
   ) VALUES (
-   ${order.workspaceId},
+   ${order.workspace_id},
    ${order.lat},
    ${order.lng},
    ${order.address},
    ${order.address_road},
-   ${order.memo}
+   ${order.memo},
+   ${order.phone}
   )`;
 };

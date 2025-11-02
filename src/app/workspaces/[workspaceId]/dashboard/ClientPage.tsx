@@ -1,20 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TMap } from "@/components/client/TMap";
 import Chip from "@/components/server/Chip";
 import type { Order } from "@/services/orders/types";
 import type { TMapInstance } from "@/types/tmap";
+import { getOrdersAction } from "../orders/actions";
 import InfoWindow from "./components/InfoWindow";
 
 interface Props {
   workspaceId: string;
-  orders: Order[];
 }
 
-export default function ClientPage({ orders }: Props) {
+export default function ClientPage({ workspaceId }: Props) {
   const [map, setMap] = useState<TMapInstance | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+  useEffect(() => {
+    getOrdersAction(workspaceId).then(setOrders);
+  }, [workspaceId]);
 
   const handleClickChip = ({ lat, lng }: Order) => {
     map.setCenter(new Tmapv3.LatLng(lat, lng));
@@ -23,7 +28,7 @@ export default function ClientPage({ orders }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <aside className="always-scrollbar-x flex gap-2">
+      <aside className="h-10 flex gap-2 always-scrollbar-x">
         {orders.map((order) => (
           <button
             type="button"
@@ -31,7 +36,7 @@ export default function ClientPage({ orders }: Props) {
             key={order.id}
             onClick={() => handleClickChip(order)}
           >
-            <Chip>{order.address || order.address_road}</Chip>
+            <Chip>{order.address_road || order.address}</Chip>
           </button>
         ))}
       </aside>
@@ -42,7 +47,7 @@ export default function ClientPage({ orders }: Props) {
             <Chip
               className={`${order.status === "registered" ? "bg-red-500" : "bg-lime-500"} text-slate-50 font-bold`}
             >
-              {order.status === "registered" ? "대기" : "완료"}
+              {order.status === "registered" ? "등록" : "완료"}
             </Chip>
           ),
           onClick: () => setSelectedOrder(order),
