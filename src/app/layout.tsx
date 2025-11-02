@@ -25,14 +25,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: <TMap API 동적 script import 미지원>
+          dangerouslySetInnerHTML={{
+            __html: `
+              document.write('<script src="https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${process.env.NEXT_PUBLIC_TMAP_APP_KEY}"><\\/script>');
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Script
-          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_JAVASCRIPT_KEY}&libraries=services,clusterer&autoload=false`}
-          strategy="beforeInteractive"
-        />
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import * as workspaceDao from "@/features/workspaces/dao";
+import * as workspaceDao from "@/services/workspaces/dao";
 
 export async function goDashboardAction(formData: FormData) {
   const nm = (formData.get("workspaceNm") as string)?.trim();
@@ -16,5 +16,5 @@ export async function goDashboardAction(formData: FormData) {
   })();
   if (!id) return;
 
-  redirect(`/workspaces/${id}`);
+  redirect(`/workspaces/${id}/dashboard`);
 }
