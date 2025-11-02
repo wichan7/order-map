@@ -1,5 +1,5 @@
 import { sql } from "@/core/db";
-import type { Order } from "@/features/orders/types";
+import type { Order } from "@/services/orders/types";
 
 export const select = async (workspaceId: string) => {
   return (await sql`SELECT * FROM "order" WHERE workspace_id = ${workspaceId}`) as Order[];
@@ -15,13 +15,15 @@ export const insert = async (
     lng,
     address,
     address_road,
-    memo
+    memo,
+    phone
   ) VALUES (
-   ${order.workspaceId},
+   ${order.workspace_id},
    ${order.lat},
    ${order.lng},
    ${order.address},
    ${order.address_road},
-   ${order.memo}
+   ${order.memo},
+   ${order.phone}
   )`;
 };

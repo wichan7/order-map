@@ -1,12 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import * as orderDao from "@/features/orders/dao";
-import type { Order } from "@/features/orders/types";
+import * as orderDao from "@/services/orders/dao";
+import type { Order } from "@/services/orders/types";
 
-export const create = async (
+export const createOrderAction = async (
   order: Omit<Order, "status" | "id" | "created_at" | "updated_at">,
 ) => {
   await orderDao.insert(order);
-  revalidatePath(`/workspaces/${order.workspaceId}`);
+  revalidatePath(`/workspaces/${order.workspace_id}`);
+};
+
+export const getOrdersAction = async (workspaceId: string) => {
+  return await orderDao.select(workspaceId);
 };

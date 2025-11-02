@@ -1,3 +1,11 @@
-export default async function Orders() {
-  return <div>{JSON.stringify({})}</div>;
+import ClientPage from "./ClientPage";
+
+export default async function OrdersPage({
+  params,
+}: Readonly<{
+  params: Promise<{ workspaceId: string }>;
+}>) {
+  const { workspaceId } = await params;
+
+  return <ClientPage workspaceId={workspaceId} />;
 }

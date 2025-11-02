@@ -1,118 +1,67 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
-import type { Order } from "@/features/orders/types";
-import * as orderAction from "../orders/actions";
-
-interface Marker extends Order {}
+import { TMap } from "@/components/client/TMap";
+import Chip from "@/components/server/Chip";
+import type { Order } from "@/services/orders/types";
+import type { TMapInstance } from "@/types/tmap";
+import { getOrdersAction } from "../orders/actions";
+import InfoWindow from "./components/InfoWindow";
 
 interface Props {
   workspaceId: string;
-  orders: Order[];
 }
 
-const getAddressByLatLng = (lat: number, lng: number) => {
-  return new Promise<{
-    address: kakao.maps.services.Address;
-    road_address: kakao.maps.services.RoadAaddress | null;
-  } | null>((res) => {
-    const geocoder = new kakao.maps.services.Geocoder();
-    geocoder.coord2Address(lng, lat, (addresses) => {
-      res(addresses[0] ?? null);
-    });
-  });
-};
-
-export default function ClientPage({ workspaceId, orders }: Props) {
-  const [markers, setMarkers] = useState<Marker[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
-  const [newMarker, setNewMarker] = useState<Marker | null>(null);
+export default function ClientPage({ workspaceId }: Props) {
+  const [map, setMap] = useState<TMapInstance | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
-    setMarkers(orders.map((order) => ({ ...order, collapsed: true })));
-  }, [orders]);
+    getOrdersAction(workspaceId).then(setOrders);
+  }, [workspaceId]);
 
-  const handleMapClick = async (
-    _: kakao.maps.Map,
-    { latLng }: kakao.maps.event.MouseEvent,
-  ) => {
-    const [lat, lng] = [latLng.getLat(), latLng.getLng()];
-    const address = await getAddressByLatLng(lat, lng);
-
-    setSelectedMarker(null);
-    setNewMarker({
-      lat,
-      lng,
-      workspaceId,
-      address: address?.address?.address_name,
-      address_road: address?.road_address?.address_name,
-    });
-  };
-
-  const handleMarkerClick = (marker: Marker) => {
-    setSelectedMarker(marker);
-    setNewMarker(null);
-  };
-
-  const handleSubmit = () => {
-    if (newMarker) {
-      orderAction.create(newMarker);
-      setNewMarker(null);
-    }
-  };
-
-  const handleCancel = () => {
-    setNewMarker(null);
+  const handleClickChip = ({ lat, lng }: Order) => {
+    map.setCenter(new Tmapv3.LatLng(lat, lng));
+    map.setZoom(16);
   };
 
   return (
-    <div className="flex h-full">
-      <Map
-        className="flex-4"
-        center={{ lat: 37.6051650256136, lng: 127.10122162040625 }}
-        level={4}
-        onClick={handleMapClick}
-      >
-        {markers.map((marker) => (
-          <MapMarker
-            key={`${marker.id}`}
-            position={{ lat: marker.lat, lng: marker.lng }}
-            onClick={() => handleMarkerClick(marker)}
-          />
-        ))}
-        {selectedMarker && (
-          <MapMarker
-            position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
+    <div className="flex flex-col h-full">
+      <aside className="h-10 flex gap-2 always-scrollbar-x">
+        {orders.map((order) => (
+          <button
+            type="button"
+            className="flex-shrink-0"
+            key={order.id}
+            onClick={() => handleClickChip(order)}
           >
-            <div className="bg-white p-5 text-sm wrap-break-word">
-              {selectedMarker.address_road || selectedMarker.address}
-            </div>
-          </MapMarker>
-        )}
-        {newMarker && (
-          <MapMarker position={{ lat: newMarker.lat, lng: newMarker.lng }}>
-            <div className="bg-white p-5 text-sm wrap-break-word">
-              {newMarker.address || "결과 없음"}
-              {newMarker.address && (
-                <form onSubmit={handleSubmit} className="flex gap-6">
-                  <button type="submit">적용</button>
-                  <button type="button" onClick={handleCancel}>
-                    취소
-                  </button>
-                </form>
-              )}
-            </div>
-          </MapMarker>
-        )}
-      </Map>
-      <aside className="flex-1 overflow-y-scroll">
-        {orders.map(({ address, lat, lng }) => (
-          <div className="border-b border-solid min-h-40" key={`${lat}-${lng}`}>
-            {address}
-          </div>
+            <Chip>{order.address_road || order.address}</Chip>
+          </button>
         ))}
       </aside>
+      <TMap
+        className="flex-1"
+        markerList={orders.map((order) => ({
+          content: (
+            <Chip
+              className={`${order.status === "registered" ? "bg-red-500" : "bg-lime-500"} text-slate-50 font-bold`}
+            >
+              {order.status === "registered" ? "등록" : "완료"}
+            </Chip>
+          ),
+          onClick: () => setSelectedOrder(order),
+          position: { lat: order.lat, lng: order.lng },
+        }))}
+        onMapLoaded={setMap}
+      />
+      {selectedOrder && (
+        <InfoWindow
+          order={selectedOrder}
+          className="absolute bottom-10 right-10"
+          onClickClose={() => setSelectedOrder(null)}
+        />
+      )}
     </div>
   );
 }
