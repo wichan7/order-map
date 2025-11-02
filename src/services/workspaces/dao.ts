@@ -1,5 +1,5 @@
 import { sql } from "@/core/db";
-import type { Workspace } from "@/features/workspaces/types";
+import type { Workspace } from "@/services/workspaces/types";
 
 export const getOneById = async (id: Workspace["id"]) => {
   const result =

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import * as workspaceDao from "@/features/workspaces/dao";
+import * as workspaceDao from "@/services/workspaces/dao";
 
 export default async function WorkspaceLayout({
   children,
@@ -28,7 +28,6 @@ export default async function WorkspaceLayout({
               {workspace.nm}
             </h1>
           </div>
-
           {/* 메뉴 */}
           <div className="flex items-center gap-6">
             <Link
@@ -43,10 +42,15 @@ export default async function WorkspaceLayout({
             >
               주문관리
             </Link>
+            <Link
+              href={`/`}
+              className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+            >
+              홈
+            </Link>
           </div>
         </div>
       </nav>
-
       {/* 콘텐츠 영역 */}
       <main className="flex-1 overflow-auto">{children}</main>
     </div>
