@@ -8,5 +8,9 @@ export const createOrderAction = async (
   order: Omit<Order, "status" | "id" | "created_at" | "updated_at">,
 ) => {
   await orderDao.insert(order);
-  revalidatePath(`/workspaces/${order.workspaceId}`);
+  revalidatePath(`/workspaces/${order.workspace_id}`);
+};
+
+export const getOrdersAction = async (workspaceId: string) => {
+  return await orderDao.select(workspaceId);
 };

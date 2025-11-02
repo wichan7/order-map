@@ -25,7 +25,9 @@ export default function InfoWindow({
       {order.id && (
         <p className="text-gray-800 font-semibold mb-1">주문 ID: {order.id}</p>
       )}
-      <p className="text-gray-700 mb-1">워크스페이스 ID: {order.workspaceId}</p>
+      <p className="text-gray-700 mb-1">
+        워크스페이스 ID: {order.workspace_id}
+      </p>
       <p className="text-gray-700 mb-1">위도: {order.lat}</p>
       <p className="text-gray-700 mb-1">경도: {order.lng}</p>
       {order.phone && (

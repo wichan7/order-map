@@ -1,8 +1,3 @@
-export {};
-
-type TMapLatLng = any;
-export type TMapInstance = any;
-
 declare global {
   interface Window {
     Tmapv3: {
@@ -14,3 +9,6 @@ declare global {
 
   const Tmapv3: Window["Tmapv3"];
 }
+
+type TMapLatLng = any;
+export type TMapInstance = any;
