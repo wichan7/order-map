@@ -2,7 +2,13 @@ import { sql } from "@/core/db";
 import type { Order } from "@/services/orders/types";
 
 export const select = async (workspaceId: string) => {
-  return (await sql`SELECT * FROM "order" WHERE workspace_id = ${workspaceId}`) as Order[];
+  return (await sql`SELECT * FROM "order" WHERE workspace_id = ${workspaceId} ORDER BY created_at DESC`) as Order[];
+};
+
+export const selectById = async (orderId: string) => {
+  return (await sql`SELECT * FROM "order" WHERE id = ${orderId} LIMIT 1`)[0] as
+    | Order
+    | undefined;
 };
 
 export const insert = async (
@@ -26,4 +32,26 @@ export const insert = async (
    ${order.memo},
    ${order.phone}
   )`;
+};
+
+export const update = async (order: Omit<Order, "">) => {
+  return await sql`
+  UPDATE "order" 
+  SET workspace_id = ${order.workspace_id}
+    , lat = ${order.lat}
+    , lng = ${order.lng}
+    , address = ${order.address}
+    , address_road = ${order.address_road}
+    , memo = ${order.memo}
+    , phone = ${order.phone}
+  WHERE id = ${order.id}
+  `;
+};
+
+export const del = async (orderId: string) => {
+  return await sql`
+  DELETE
+  FROM "order"
+  WHERE id = ${orderId}
+  `;
 };
