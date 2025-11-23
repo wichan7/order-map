@@ -21,8 +21,12 @@
       "suspicious": {
         "noUnknownAtRules": "off",
         "noShadowRestrictedNames": "off"
+      },
+      "a11y": {
+        "useButtonType": "off"
       }
     },
+
     "domains": {
       "next": "recommended",
       "react": "recommended"
