@@ -25,31 +25,37 @@ export default function ClientPage({ workspaceId }: Props) {
       : orders.filter((order) => order.status === filter);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div>
       <h1 className="text-2xl font-bold mb-4">주문 목록</h1>
-
       {/* 필터 버튼 */}
-      <div className="flex gap-2 mb-6">
-        {["all", "registered", "completed"].map((status) => (
-          <button
-            type="button"
-            key={status}
-            onClick={() =>
-              setFilter(status as "all" | "registered" | "completed")
-            }
-            className={`px-4 py-2 rounded ${
-              filter === status
-                ? "bg-blue-500 text-white"
-                : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
-            } transition`}
-          >
-            {status === "all"
-              ? "전체"
-              : status === "registered"
-                ? "등록"
-                : "완료"}
-          </button>
-        ))}
+      <div className="flex justify-between mb-4">
+        <Link
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+          href={`/workspaces/${workspaceId}/orders/new`}
+        >
+          신규 등록
+        </Link>
+        <div className="flex gap-2">
+          {["all", "registered", "completed"].map((status) => (
+            <button
+              key={status}
+              onClick={() =>
+                setFilter(status as "all" | "registered" | "completed")
+              }
+              className={`px-4 py-2 rounded ${
+                filter === status
+                  ? "bg-blue-500 text-white"
+                  : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
+              } transition`}
+            >
+              {status === "all"
+                ? "전체"
+                : status === "registered"
+                  ? "등록"
+                  : "완료"}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 주문 리스트 */}
