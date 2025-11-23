@@ -44,6 +44,7 @@ export const update = async (order: Omit<Order, "">) => {
     , address_road = ${order.address_road}
     , memo = ${order.memo}
     , phone = ${order.phone}
+    , status = ${order.status}
   WHERE id = ${order.id}
   `;
 };
