@@ -5,7 +5,6 @@ export type Order = {
   lng: number;
   phone?: string;
   address?: string;
-  address_road?: string;
   memo?: string;
   status?: "registered" | "completed";
   created_at?: string;

@@ -36,9 +36,6 @@ export default function InfoWindow({
       {order.address && (
         <p className="text-gray-700 mb-1">주소: {order.address}</p>
       )}
-      {order.address_road && (
-        <p className="text-gray-700 mb-1">도로명 주소: {order.address_road}</p>
-      )}
       {order.memo && <p className="text-gray-700 mb-1">메모: {order.memo}</p>}
       {order.status && (
         <p className="text-gray-700 mb-1">상태: {order.status}</p>

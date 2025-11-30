@@ -69,12 +69,8 @@ export default function ClientPage({ workspaceId }: Props) {
               href={`/workspaces/${workspaceId}/orders/${order.id}`}
             >
               <li className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-                <h2 className="text-lg font-semibold mb-2">
-                  {order.address_road || order.address}
-                </h2>
-                {order.memo && (
-                  <p className="text-gray-600">메모: {order.memo}</p>
-                )}
+                <h2 className="text-lg font-semibold mb-2">{order.address}</h2>
+                {order.memo && <p className="text-gray-600">{order.memo}</p>}
               </li>
             </Link>
           ))}
