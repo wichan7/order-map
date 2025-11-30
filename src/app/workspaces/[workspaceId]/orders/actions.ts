@@ -1,50 +1,27 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import * as orderDao from "@/services/orders/dao";
+import orderService from "@/services/orders/service";
 import type { Order } from "@/services/orders/types";
+import tmapService from "@/services/tmap/service";
 
-export async function createOrderAction(formData: FormData) {
-  const dto: Partial<Order> = {
-    workspace_id: formData.get("workspace_id")?.toString(),
-    phone: formData.get("phone")?.toString(),
-    memo: formData.get("memo")?.toString(),
-    address: formData.get("address")?.toString(),
-    address_road: formData.get("address_road")?.toString(),
-    lat: Number(formData.get("lat")),
-    lng: Number(formData.get("lng")),
-  };
-
-  await orderDao.insert(dto as Order);
+export async function createOrderAction(order: Partial<Order>) {
+  await orderService.create(order as Order);
   redirect("..");
 }
 
-export async function modifyOrderAction(formData: FormData) {
-  const dto: Partial<Order> = {
-    id: formData.get("id")?.toString(),
-    workspace_id: formData.get("workspace_id")?.toString(),
-    phone: formData.get("phone")?.toString(),
-    memo: formData.get("memo")?.toString(),
-    address: formData.get("address")?.toString(),
-    address_road: formData.get("address_road")?.toString(),
-    status: formData.get("status")?.toString() as Order["status"],
-    lat: Number(formData.get("lat")),
-    lng: Number(formData.get("lng")),
-  };
-
-  await orderDao.update(dto as Order);
+export async function modifyOrderAction(order: Partial<Order>) {
+  await orderService.modify(order as Order);
   redirect("..");
 }
 
-export async function removeOrderAction(formData: FormData) {
-  const dto: Partial<Order> = {
-    id: formData.get("id")?.toString(),
-  };
+export async function removeOrderAction(id: Order["id"]) {
+  if (!id) throw new Error("Invalid id");
 
-  await orderDao.del(dto.id!);
+  await orderService.remove(id);
   redirect("..");
 }
 
 export const getOrdersAction = async (workspaceId: string) => {
-  return await orderDao.select(workspaceId);
+  return await orderService.get(workspaceId);
 };

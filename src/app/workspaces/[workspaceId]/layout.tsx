@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import * as workspaceDao from "@/services/workspaces/dao";
+import workspaceService from "@/services/workspaces/service";
 
 export default async function WorkspaceLayout({
   children,
@@ -13,7 +13,7 @@ export default async function WorkspaceLayout({
   if (!workspaceId) {
     return notFound();
   }
-  const workspace = await workspaceDao.getOneById(workspaceId);
+  const workspace = await workspaceService.getOneById(workspaceId);
   if (!workspace) {
     return notFound();
   }

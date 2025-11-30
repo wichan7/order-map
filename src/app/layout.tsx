@@ -29,7 +29,7 @@ export default function RootLayout({
           // biome-ignore lint/security/noDangerouslySetInnerHtml: <TMap API 동적 script import 미지원>
           dangerouslySetInnerHTML={{
             __html: `
-              document.write('<script src="https://apis.openapi.sk.com/tmap/vectorjs?version=1&appKey=${process.env.NEXT_PUBLIC_TMAP_APP_KEY}"><\\/script>');
+              document.write('<script src="${process.env.NEXT_PUBLIC_TMAP_API_URL}/tmap/vectorjs?version=1&appKey=${process.env.NEXT_PUBLIC_TMAP_APP_KEY}"><\\/script>');
             `,
           }}
         />

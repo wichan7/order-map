@@ -36,7 +36,7 @@ export default function ClientPage({ workspaceId }: Props) {
             key={order.id}
             onClick={() => handleClickChip(order)}
           >
-            <Chip>{order.address_road || order.address}</Chip>
+            <Chip>{order.address}</Chip>
           </button>
         ))}
       </aside>
