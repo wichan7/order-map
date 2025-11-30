@@ -14,7 +14,7 @@ import type { TMapInstance } from "@/types/tmap";
 
 interface MarkerProps {
   position: COORD;
-  content: ReactNode;
+  content?: ReactNode;
   onClick?: () => void;
 }
 
@@ -45,6 +45,14 @@ export function TMap({
     });
     setMapInstance(map);
     onMapLoaded?.(map);
+
+    return () => {
+      const mapContainer = document.getElementById(mapId);
+      if (mapContainer) {
+        mapContainer.innerHTML = "";
+        setMapInstance(null);
+      }
+    };
   }, [mapId, center, zoom, onMapLoaded]);
 
   // Map-Marker
