@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import orderService from "@/services/orders/service";
 import type { Order } from "@/services/orders/types";
-import tmapService from "@/services/tmap/service";
 
 export async function createOrderAction(order: Partial<Order>) {
   await orderService.create(order as Order);

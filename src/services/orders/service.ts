@@ -42,6 +42,7 @@ const modify = async (order: Omit<Order, "">) => {
     , memo = ${order.memo}
     , phone = ${order.phone}
     , status = ${order.status}
+    , updated_at = NOW()
   WHERE id = ${order.id}
   `;
 };

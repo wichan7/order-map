@@ -1,5 +1,6 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { TMap } from "@/components/client/TMap";
 import Chip from "@/components/server/Chip";
@@ -47,7 +48,7 @@ export default function ClientPage({ workspaceId }: Props) {
             <Chip
               className={`${order.status === "registered" ? "bg-red-500" : "bg-lime-500"} text-slate-50 font-bold`}
             >
-              {order.status === "registered" ? "등록" : "완료"}
+              {order.status === "registered" ? "대기" : "완료"}
             </Chip>
           ),
           onClick: () => setSelectedOrder(order),
@@ -60,6 +61,9 @@ export default function ClientPage({ workspaceId }: Props) {
           order={selectedOrder}
           className="absolute bottom-10 right-10"
           onClickClose={() => setSelectedOrder(null)}
+          onClickLink={() =>
+            redirect(`/workspaces/${workspaceId}/orders/${selectedOrder.id}`)
+          }
         />
       )}
     </div>
