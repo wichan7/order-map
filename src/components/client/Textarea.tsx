@@ -1,11 +1,16 @@
-import clsx from "clsx";
+"use client";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+import clsx from "clsx";
+import TextareaAutosize, {
+  type TextareaAutosizeProps,
+} from "react-textarea-autosize";
+
+interface Props extends Omit<TextareaAutosizeProps, "style"> {
   label?: string;
   error?: string;
 }
 
-export const Input = ({ label, className, error, ...props }: Props) => {
+export const Textarea = ({ label, className, error, ...props }: Props) => {
   return (
     <div
       className={clsx(
@@ -14,11 +19,12 @@ export const Input = ({ label, className, error, ...props }: Props) => {
       )}
     >
       {label && <span>{label}</span>}
-      <input
+      <TextareaAutosize
         className={clsx(
-          "inline-block border-1 border-solid rounded-md p-2",
+          "inline-block border-1 border-solid rounded-md p-2 resize-none",
           props.disabled && "bg-gray-100",
           error && "border-red-500",
+          className,
         )}
         {...props}
       />

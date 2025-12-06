@@ -1,11 +1,23 @@
 import clsx from "clsx";
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
+interface Option {
+  value: string | number;
+  label: string;
 }
 
-export const Input = ({ label, className, error, ...props }: Props) => {
+interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  label?: string;
+  error?: string;
+  options?: Option[];
+}
+
+export const Select = ({
+  label,
+  className,
+  error,
+  options = [],
+  ...props
+}: Props) => {
   return (
     <div
       className={clsx(
@@ -14,15 +26,22 @@ export const Input = ({ label, className, error, ...props }: Props) => {
       )}
     >
       {label && <span>{label}</span>}
-      <input
+      <select
         className={clsx(
           "inline-block border-1 border-solid rounded-md p-2",
           props.disabled && "bg-gray-100",
           error && "border-red-500",
         )}
         {...props}
-      />
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
       {error && <span className="text-red-500 text-sm">{error}</span>}
     </div>
   );
 };
+
