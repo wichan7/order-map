@@ -1,8 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import { Textarea } from "@/components/client/Textarea";
 import { TMap } from "@/components/client/TMap";
 import { Button } from "@/components/server/Button";
@@ -44,6 +46,7 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
   const address_text = useWatch({ control, name: "address_text" });
   const lat = useWatch({ control, name: "lat" });
   const lng = useWatch({ control, name: "lng" });
+  const router = useRouter();
 
   const MemoizedMap = useMemo(() => {
     if (!lat || !lng) return null;
@@ -62,10 +65,14 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
     isNew
       ? await createOrderAction(formValue)
       : await modifyOrderAction(formValue);
+    toast.success(`${isNew ? "등록" : "수정"}에 성공했습니다.`);
+    router.back();
   });
 
   const onClickRemove = () => {
     removeOrderAction(order?.id);
+    toast.success("삭제에 성공했습니다.");
+    router.back();
   };
 
   const onClickSearch = async () => {

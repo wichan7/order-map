@@ -32,6 +32,36 @@ const create = async (
   )`;
 };
 
+const createMany = async (
+  orders: Array<Omit<Order, "status" | "id" | "created_at" | "updated_at">>,
+) => {
+  if (orders.length <= 0) {
+    return null;
+  }
+
+  const values = orders.map(
+    (o) => sql`(
+      ${o.workspace_id},
+      ${o.lat},
+      ${o.lng},
+      ${o.address},
+      ${o.memo},
+      ${o.phone}
+    )`,
+  );
+
+  return await sql`
+    INSERT INTO "order" (
+      workspace_id,
+      lat,
+      lng,
+      address,
+      memo,
+      phone
+    ) VALUES ${values.join(",")}
+  `;
+};
+
 const modify = async (order: Omit<Order, "">) => {
   return await sql`
   UPDATE "order" 
@@ -55,6 +85,6 @@ const remove = async (orderId: string) => {
   `;
 };
 
-const orderService = { get, getOneById, create, modify, remove };
+const orderService = { get, getOneById, create, createMany, modify, remove };
 
 export default orderService;
