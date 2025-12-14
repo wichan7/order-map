@@ -1,3 +1,3 @@
 export type BaseVariant = "primary";
 
-export type ButtonVaraint = BaseVariant | "error";
+export type ButtonVariant = BaseVariant | "error" | "ghost";

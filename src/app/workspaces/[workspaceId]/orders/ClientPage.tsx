@@ -91,11 +91,16 @@ export default function ClientPage({ workspaceId }: Props) {
       <h1 className="text-3xl font-extrabold text-gray-900 mb-6">주문 목록</h1>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <Button type="button">
+        <div className="flex gap-2">
           <Link href={`/workspaces/${workspaceId}/orders/new`}>
-            신규 주문 등록
+            <Button type="button">신규 주문 등록</Button>
           </Link>
-        </Button>
+          <Link href={`/workspaces/${workspaceId}/orders/bulk`}>
+            <Button type="button" variant="ghost">
+              다중 등록
+            </Button>
+          </Link>
+        </div>
         <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
           {["all", "registered", "completed"].map((status) => (
             <button

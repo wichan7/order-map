@@ -20,3 +20,9 @@ export async function removeOrderAction(id: Order["id"]) {
 export const getOrdersAction = async (workspaceId: string) => {
   return await orderService.get(workspaceId);
 };
+
+export async function createOrdersBulkAction(
+  orders: Array<Omit<Order, "status" | "id" | "created_at" | "updated_at">>,
+) {
+  await orderService.createMany(orders);
+}

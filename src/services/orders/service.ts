@@ -39,16 +39,12 @@ const createMany = async (
     return null;
   }
 
-  const values = orders.map(
-    (o) => sql`(
-      ${o.workspace_id},
-      ${o.lat},
-      ${o.lng},
-      ${o.address},
-      ${o.memo},
-      ${o.phone}
-    )`,
-  );
+  const workspaceIds = orders.map((o) => o.workspace_id);
+  const lats = orders.map((o) => o.lat);
+  const lngs = orders.map((o) => o.lng);
+  const addresses = orders.map((o) => o.address);
+  const memos = orders.map((o) => o.memo);
+  const phones = orders.map((o) => o.phone);
 
   return await sql`
     INSERT INTO "order" (
@@ -58,7 +54,16 @@ const createMany = async (
       address,
       memo,
       phone
-    ) VALUES ${values.join(",")}
+    )
+    SELECT *
+    FROM UNNEST(
+      ${workspaceIds}::uuid[],
+      ${lats}::double precision[],
+      ${lngs}::double precision[],
+      ${addresses}::text[],
+      ${memos}::text[],
+      ${phones}::text[]
+    )
   `;
 };
 

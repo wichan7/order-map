@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -148,7 +148,7 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="휴대폰 번호"
-            placeholder="010-xxxx-xxxx"
+            placeholder="01012345678"
             {...register("phone")}
             error={errors.phone?.message}
           />
@@ -171,8 +171,8 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
             label="배송지 주소 검색"
             {...register("address_text")}
             placeholder="서울특별시 용마산로 616"
+            className="w-full"
             error={errors.address_text?.message}
-            className="flex-grow"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -190,6 +190,7 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
           {...register("address")}
           disabled
           error={errors.address?.message}
+          className="w-full"
         />
 
         {MemoizedMap || (
