@@ -9,8 +9,9 @@ export const Input = ({ label, className, error, ...props }: Props) => {
   return (
     <div
       className={clsx(
-        "flex flex-col gap-1 text-left",
-        props.hidden && "hidden",
+        "flex-col gap-1 text-left",
+        props.hidden ? "hidden" : "inline-flex",
+        className,
       )}
     >
       {label && <span>{label}</span>}
