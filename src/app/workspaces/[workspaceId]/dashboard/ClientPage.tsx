@@ -46,7 +46,7 @@ export default function ClientPage({ workspaceId }: Props) {
         markerList={orders.map((order) => ({
           content: (
             <Chip
-              className={`${order.status === "registered" ? "bg-red-500" : "bg-lime-500"} text-slate-50 font-bold`}
+              className={`${order.status === "registered" ? "bg-sky-600" : "bg-yellow-500"} text-slate-50 font-bold`}
             >
               {order.status === "registered" ? "대기" : "완료"}
             </Chip>

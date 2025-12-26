@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/server/Button";
+import Chip from "@/components/server/Chip";
 import type { Order } from "@/services/orders/types";
 import { renderWithBreaks } from "@/utils/render";
 import { getOrdersAction } from "./actions";
@@ -28,15 +29,9 @@ const OrderCard = ({
         <h2 className="text-lg font-bold text-blue-600 group-hover:text-blue-700 truncate mr-4">
           {order.address || "주소 정보 없음"}
         </h2>
-        <span
-          className={`text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${
-            order.status === "completed"
-              ? "bg-green-100 text-green-700"
-              : "bg-yellow-100 text-yellow-700"
-          }`}
-        >
-          {order.status === "completed" ? "완료" : "대기"}
-        </span>
+        <Chip size="small" className={`text-slate-50 font-bold ${
+          order.status === "registered" ? "bg-sky-600" : "bg-yellow-500"
+        }`}>{order.status === "registered" ? "대기" : "완료"}</Chip>
       </div>
 
       <div className="text-sm space-y-1 mb-3">
