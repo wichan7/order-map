@@ -20,6 +20,9 @@ const create = async (
     lat,
     lng,
     address,
+    address_detail,
+    quantity,
+    customer_price,
     memo,
     phone
   ) VALUES (
@@ -27,6 +30,9 @@ const create = async (
    ${order.lat},
    ${order.lng},
    ${order.address},
+   ${order.address_detail},
+   ${order.quantity},
+   ${order.customer_price},
    ${order.memo},
    ${order.phone}
   )`;
@@ -43,6 +49,9 @@ const createMany = async (
   const lats = orders.map((o) => o.lat);
   const lngs = orders.map((o) => o.lng);
   const addresses = orders.map((o) => o.address);
+  const addressDetails = orders.map((o) => o.address_detail);
+  const quantities = orders.map((o) => o.quantity);
+  const customerPrices = orders.map((o) => o.customer_price);
   const memos = orders.map((o) => o.memo);
   const phones = orders.map((o) => o.phone);
 
@@ -52,6 +61,9 @@ const createMany = async (
       lat,
       lng,
       address,
+      address_detail,
+      quantity,
+      customer_price,
       memo,
       phone
     )
@@ -61,6 +73,9 @@ const createMany = async (
       ${lats}::double precision[],
       ${lngs}::double precision[],
       ${addresses}::text[],
+      ${addressDetails}::text[],
+      ${quantities}::text[],
+      ${customerPrices}::text[],
       ${memos}::text[],
       ${phones}::text[]
     )
@@ -74,6 +89,9 @@ const modify = async (order: Omit<Order, "">) => {
     , lat = ${order.lat}
     , lng = ${order.lng}
     , address = ${order.address}
+    , address_detail = ${order.address_detail}
+    , quantity = ${order.quantity}
+    , customer_price = ${order.customer_price}
     , memo = ${order.memo}
     , phone = ${order.phone}
     , status = ${order.status}

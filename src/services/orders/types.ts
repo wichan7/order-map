@@ -5,6 +5,9 @@ export type Order = {
   lng: number;
   phone?: string;
   address?: string;
+  address_detail?: string;
+  quantity?: string;
+  customer_price?: string;
   memo?: string;
   status?: "registered" | "completed";
   created_at?: string;

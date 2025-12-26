@@ -63,7 +63,9 @@ export default function InfoWindow({
       <div className="p-4 space-y-2">
         {order.phone && <InfoItem label="전화번호" value={order.phone} />}
         {order.address && <InfoItem label="주소" value={order.address} />}
-        {order.status && <InfoItem label="상태" value={statusLabel} />}
+        {order.address_detail && <InfoItem label="상세 주소" value={order.address_detail} />}
+        {order.quantity && <InfoItem label="개수" value={order.quantity} />}
+        {order.customer_price && <InfoItem label="판매 가격" value={order.customer_price} />}
         {order.created_at && (
           <InfoItem label="생성일" value={order.created_at.toLocaleString()} />
         )}
