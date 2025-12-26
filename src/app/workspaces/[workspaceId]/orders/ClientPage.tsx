@@ -29,9 +29,14 @@ const OrderCard = ({
         <h2 className="text-lg font-bold text-blue-600 group-hover:text-blue-700 truncate mr-4">
           {order.address || "주소 정보 없음"}
         </h2>
-        <Chip size="small" className={`text-slate-50 font-bold ${
-          order.status === "registered" ? "bg-sky-600" : "bg-yellow-500"
-        }`}>{order.status === "registered" ? "대기" : "완료"}</Chip>
+        <Chip
+          size="small"
+          className={`text-slate-50 font-bold ${
+            order.status === "registered" ? "bg-sky-600" : "bg-yellow-500"
+          }`}
+        >
+          {order.status === "registered" ? "대기" : "완료"}
+        </Chip>
       </div>
 
       <div className="text-sm space-y-1 mb-3">

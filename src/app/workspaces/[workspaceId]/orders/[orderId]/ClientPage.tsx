@@ -144,7 +144,20 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
             />
           </div>
         )}
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Input
+            label="수량"
+            placeholder="2"
+            {...register("quantity")}
+            error={errors.quantity?.message}
+          />
+          <Input
+            label="판매 가격"
+            placeholder="36000"
+            {...register("customer_price")}
+            error={errors.customer_price?.message}
+          />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="휴대폰 번호"
@@ -190,6 +203,12 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
           {...register("address")}
           disabled
           error={errors.address?.message}
+          className="w-full"
+        />
+        <Input
+          label="상세 주소"
+          {...register("address_detail")}
+          error={errors.address_detail?.message}
           className="w-full"
         />
 
