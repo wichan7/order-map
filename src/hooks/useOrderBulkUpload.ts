@@ -5,11 +5,13 @@ import type { Order } from "@/services/orders/types";
 import tmapService from "@/services/tmap/service";
 
 interface CsvRow {
+  customer_name?: string;
+  phone?: string;
   address: string;
   address_detail?: string;
+  entrance_password?: string;
   quantity?: string;
   customer_price?: string;
-  phone?: string;
   memo?: string;
 }
 
@@ -45,25 +47,28 @@ export function useOrderBulkUpload(workspaceId: string) {
       skipEmptyLines: true,
       encoding: "UTF-8",
       complete: (results) => {
-        const parsed: CsvRow[] = [];
-        for (const row of results.data as Array<Record<string, string>>) {
-          const values = Object.values(row);
-          if (values.length > 0 && values[0]?.trim()) {
-            parsed.push({
-              address: values[0].trim(),
-              address_detail: values[1].trim() || undefined,
-              quantity: values[2].trim() || undefined,
-              customer_price: values[3].trim() || undefined,
-              phone: values[4]?.trim() || undefined,
-              memo: values[5]?.trim() || undefined,
-            });
-            console.log(parsed);
-          }
-        }
+        const data = results.data as Array<Record<string, string>>;
+
+        const parsed: CsvRow[] = data
+          .map((row) => ({
+            customer_name: row.customer_name?.trim(),
+            phone: row.phone?.trim(),
+            address: row.address?.trim(),
+            address_detail: row.address_detail?.trim(),
+            entrance_password: row.entrance_password?.trim(),
+            quantity: row.quantity?.trim(),
+            customer_price: row.customer_price?.trim(),
+            memo: row.memo?.trim(),
+          }))
+          .filter((item) => item.address);
+
         if (parsed.length === 0) {
-          setError("CSV 파일에 유효한 데이터가 없습니다.");
+          setError(
+            "CSV 파일에 유효한 데이터가 없거나 헤더 명칭이 일치하지 않습니다.",
+          );
         } else {
           setCsvData(parsed);
+          console.log("Parsed Data:", parsed);
         }
       },
       error: (err) => setError(`파일 읽기 오류: ${err.message}`),
@@ -113,11 +118,13 @@ export function useOrderBulkUpload(workspaceId: string) {
           workspace_id: workspaceId,
           lat: lat,
           lng: lng,
+          customer_name: row.customer_name,
+          phone: row.phone,
           address: row.address,
           address_detail: row.address_detail,
+          entrance_password: row.entrance_password,
           quantity: row.quantity,
           customer_price: row.customer_price,
-          phone: row.phone,
           memo: row.memo,
         });
       }

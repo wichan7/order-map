@@ -21,6 +21,8 @@ export const orderFormSchema = z.object({
   address_detail: z.string().optional(),
   quantity: z.string().optional(),
   customer_price: z.string().optional(),
+  customer_name: z.string().optional(),
+  entrance_password: z.string().optional(),
   memo: z.string().optional(),
   status: z.enum(Object.values(ORDER_STATUS)).optional(),
   created_at: z.string().optional(),
