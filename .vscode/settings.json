@@ -19,10 +19,10 @@
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "[tsx]": {
+  "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "[jsx]": {
+  "[javascriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   }
 }
