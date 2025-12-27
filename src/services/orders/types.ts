@@ -8,6 +8,8 @@ export type Order = {
   address_detail?: string;
   quantity?: string;
   customer_price?: string;
+  customer_name?: string;
+  entrance_password?: string;
   memo?: string;
   status?: "registered" | "completed";
   created_at?: string;

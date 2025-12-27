@@ -34,7 +34,7 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
     setValue,
     setError,
     clearErrors,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isValid, isDirty, isSubmitting },
   } = useForm<OrderForm>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
@@ -121,7 +121,7 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
               삭제
             </Button>
           )}
-          <Button disabled={!isValid || isSubmitting}>
+          <Button disabled={!isValid || !isDirty || isSubmitting}>
             {isNew ? "등록" : "수정"}
           </Button>
         </div>
@@ -146,6 +146,20 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
+            label="고객 성함"
+            placeholder="홍길동"
+            {...register("customer_name")}
+            error={errors.customer_name?.message}
+          />
+          <Input
+            label="휴대폰 번호"
+            placeholder="01012345678"
+            {...register("phone")}
+            error={errors.phone?.message}
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Input
             label="수량"
             placeholder="2"
             {...register("quantity")}
@@ -160,10 +174,10 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
-            label="휴대폰 번호"
-            placeholder="01012345678"
-            {...register("phone")}
-            error={errors.phone?.message}
+            label="공동현관 출입 비밀번호"
+            placeholder="#1234"
+            {...register("entrance_password")}
+            error={errors.entrance_password?.message}
           />
           <Textarea
             label="메모"
@@ -175,10 +189,6 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
-          위치
-        </h2>
-
         <div>
           <Input
             label="배송지 주소 검색"
@@ -221,9 +231,6 @@ export default function ClientPage({ isNew, order, workspaceId }: Props) {
 
       {!isNew && (
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
-            기타
-          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input
               label="생성 일시"
