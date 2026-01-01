@@ -26,6 +26,13 @@ const create = async (workspace: Pick<Workspace, "nm">) => {
   return result[0] ?? null;
 };
 
-const workspaceService = { getOneById, getOneByNm, create };
+const getAll = async () => {
+  const result =
+    (await sql`SELECT * FROM workspace ORDER BY created_at DESC`) as Workspace[];
+
+  return result;
+};
+
+const workspaceService = { getOneById, getOneByNm, create, getAll };
 
 export default workspaceService;
