@@ -28,6 +28,7 @@ export const Select = ({
       {label && <span>{label}</span>}
       <select
         className={clsx(
+          className,
           "inline-block border-1 border-solid rounded-md p-2",
           props.disabled && "bg-gray-100",
           error && "border-red-500",
