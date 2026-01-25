@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useState } from "react";
 import { Button } from "@/components/server/Button";
 import { Select } from "@/components/server/Select";
@@ -141,7 +142,10 @@ export default function InfoWindowContainer({
             value={currentOrder.status || "registered"}
             options={statusOptions}
             onChange={handleStatusChange}
-            className="w-full"
+            className={clsx(
+              "w-full",
+              currentOrder.status === "completed" && "bg-yellow-300",
+            )}
           />
         </div>
       )}
