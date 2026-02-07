@@ -2,12 +2,12 @@
 
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/server/Button";
 import Chip from "@/components/server/Chip";
 import type { Order } from "@/services/orders/types";
 import { renderWithBreaks } from "@/utils/render";
-import { getOrdersAction } from "./actions";
+import { getOrdersAction, removeAllOrdersAction } from "./actions";
 
 interface Props {
   workspaceId: string;
@@ -68,10 +68,37 @@ export default function ClientPage({ workspaceId }: Props) {
   const [filter, setFilter] = useState<"all" | "registered" | "completed">(
     "all",
   );
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const loadOrders = useCallback(async () => {
+    const result = await getOrdersAction(workspaceId);
+    setOrders(result);
+  }, [workspaceId]);
 
   useEffect(() => {
-    getOrdersAction(workspaceId).then((result) => setOrders(result));
-  }, [workspaceId]);
+    loadOrders();
+  }, [loadOrders]);
+
+  const handleDeleteAll = async () => {
+    if (
+      !confirm(
+        "정말로 모든 주문을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      )
+    ) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await removeAllOrdersAction(workspaceId);
+      await loadOrders();
+    } catch (error) {
+      alert("전체 삭제 중 오류가 발생했습니다.");
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const sortedAndFilteredOrders = useMemo(() => {
     const result =
@@ -100,6 +127,15 @@ export default function ClientPage({ workspaceId }: Props) {
               다중 등록
             </Button>
           </Link>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleDeleteAll}
+            disabled={isDeleting || orders.length === 0}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isDeleting ? "삭제 중..." : "전체 삭제"}
+          </Button>
         </div>
         <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
           {["all", "registered", "completed"].map((status) => (

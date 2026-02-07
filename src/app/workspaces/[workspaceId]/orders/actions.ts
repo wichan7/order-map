@@ -26,3 +26,9 @@ export async function createOrdersBulkAction(
 ) {
   await orderService.createMany(orders);
 }
+
+export async function removeAllOrdersAction(workspaceId: string) {
+  if (!workspaceId) throw new Error("Invalid workspaceId");
+
+  await orderService.removeAll(workspaceId);
+}
