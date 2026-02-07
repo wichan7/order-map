@@ -120,6 +120,22 @@ const remove = async (orderId: string) => {
   `;
 };
 
-const orderService = { get, getOneById, create, createMany, modify, remove };
+const removeAll = async (workspaceId: string) => {
+  return await sql`
+  DELETE
+  FROM "order"
+  WHERE workspace_id = ${workspaceId}
+  `;
+};
+
+const orderService = {
+  get,
+  getOneById,
+  create,
+  createMany,
+  modify,
+  remove,
+  removeAll,
+};
 
 export default orderService;
