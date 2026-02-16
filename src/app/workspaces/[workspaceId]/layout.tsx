@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import authService from "@/services/auth/service";
 import workspaceService from "@/services/workspaces/service";
 
 export default async function WorkspaceLayout({
@@ -9,11 +10,17 @@ export default async function WorkspaceLayout({
   children: React.ReactNode;
   params: Promise<{ workspaceId: string }>;
 }>) {
+  const user = await authService.getCurrentUser();
+  if (!user) {
+    redirect("/login");
+    return null;
+  }
+
   const { workspaceId } = await params;
   if (!workspaceId) {
     return notFound();
   }
-  const workspace = await workspaceService.getOneById(workspaceId);
+  const workspace = await workspaceService.getOneById(workspaceId, user.id);
   if (!workspace) {
     return notFound();
   }

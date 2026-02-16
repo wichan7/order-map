@@ -1,11 +1,19 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/server/Button";
 import { Input } from "@/components/server/Input";
+import authService from "@/services/auth/service";
 import workspaceService from "@/services/workspaces/service";
 import { goDashboardAction } from "./actions";
 
 export default async function Home() {
-  const workspaces = await workspaceService.getAll();
+  const user = await authService.getCurrentUser();
+  if (!user) {
+    redirect("/login");
+    return null;
+  }
+
+  const workspaces = await workspaceService.getAll(user.id);
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black gap-8 p-8">
