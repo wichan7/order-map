@@ -5,35 +5,25 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
-import { Textarea } from "@/components/client/Textarea";
 import { TMap } from "@/components/client/TMap";
 import { Button } from "@/components/server/Button";
 import { Input } from "@/components/server/Input";
-import { Select } from "@/components/server/Select";
-import { ORDER_STATUS_OPTIONS } from "@/core/constants";
 import type { Customer } from "@/services/customers/types";
-import type { Order } from "@/services/orders/types";
 import tmapService from "@/services/tmap/service";
 import {
-  createOrderAction,
-  modifyOrderAction,
-  removeOrderAction,
+  createCustomerAction,
+  modifyCustomerAction,
+  removeCustomerAction,
 } from "../actions";
-import { type OrderForm, orderFormSchema } from "./schema";
+import { type CustomerForm, customerFormSchema } from "./schema";
 
 interface Props {
-  workspaceId: string;
+  userId: string;
   isNew: boolean;
-  order?: Order;
-  customers?: Customer[];
+  customer?: Customer;
 }
 
-export default function ClientPage({
-  isNew,
-  order,
-  workspaceId,
-  customers = [],
-}: Props) {
+export default function ClientPage({ isNew, customer, userId }: Props) {
   const {
     control,
     register,
@@ -42,11 +32,11 @@ export default function ClientPage({
     setError,
     clearErrors,
     formState: { errors, isValid, isDirty, isSubmitting },
-  } = useForm<OrderForm>({
-    resolver: zodResolver(orderFormSchema),
+  } = useForm<CustomerForm>({
+    resolver: zodResolver(customerFormSchema),
     defaultValues: {
-      ...order,
-      workspace_id: workspaceId,
+      ...customer,
+      user_id: userId,
     },
   });
 
@@ -54,32 +44,6 @@ export default function ClientPage({
   const lat = useWatch({ control, name: "lat" });
   const lng = useWatch({ control, name: "lng" });
   const router = useRouter();
-
-  const onSelectCustomer = (customerId: string) => {
-    if (!customerId) {
-      return;
-    }
-    const selected = customers.find((c) => c.id === customerId);
-    if (!selected) return;
-
-    setValue("customer_name", selected.name || "", { shouldDirty: true });
-    setValue("phone", selected.phone || "", { shouldDirty: true });
-    setValue("entrance_password", selected.entrance_password || "", {
-      shouldDirty: true,
-    });
-    if (selected.address) {
-      setValue("address", selected.address, { shouldDirty: true });
-    }
-    if (selected.address_detail) {
-      setValue("address_detail", selected.address_detail, {
-        shouldDirty: true,
-      });
-    }
-    if (selected.lat && selected.lng) {
-      setValue("lat", selected.lat, { shouldValidate: true, shouldDirty: true });
-      setValue("lng", selected.lng, { shouldValidate: true, shouldDirty: true });
-    }
-  };
 
   const MemoizedMap = useMemo(() => {
     if (!lat || !lng) return null;
@@ -96,14 +60,14 @@ export default function ClientPage({
 
   const onSubmit = handleSubmit(async (formValue) => {
     isNew
-      ? await createOrderAction(formValue)
-      : await modifyOrderAction(formValue);
+      ? await createCustomerAction(formValue)
+      : await modifyCustomerAction(formValue);
     toast.success(`${isNew ? "등록" : "수정"}에 성공했습니다.`);
     router.back();
   });
 
   const onClickRemove = () => {
-    removeOrderAction(order?.id);
+    removeCustomerAction(customer?.id);
     toast.success("삭제에 성공했습니다.");
     router.back();
   };
@@ -146,7 +110,7 @@ export default function ClientPage({
     >
       <div className="flex justify-between items-center border-b pb-4">
         <h1 className="text-2xl font-bold text-gray-800">
-          {isNew ? "신규 주문 등록" : "주문 상세"}
+          {isNew ? "신규 고객 등록" : "고객 상세"}
         </h1>
         <div className="flex gap-3">
           {!isNew && (
@@ -160,45 +124,21 @@ export default function ClientPage({
         </div>
       </div>
 
-      {isNew && customers.length > 0 && (
-        <section>
-          <Select
-            label="고객 선택"
-            options={[
-              { label: "선택 안함 (직접 입력)", value: "" },
-              ...customers.map((c) => ({
-                label: `${c.name}${c.phone ? ` (${c.phone})` : ""}`,
-                value: c.id!,
-              })),
-            ]}
-            onChange={(e) => onSelectCustomer(e.target.value)}
-          />
-        </section>
-      )}
-
       <section className="space-y-6">
         {!isNew && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input
-              label="주문 ID"
-              {...register("id")}
-              disabled
-              error={errors.id?.message}
-            />
-            <Select
-              label="주문 상태"
-              options={ORDER_STATUS_OPTIONS}
-              {...register("status")}
-              error={errors.status?.message}
-            />
-          </div>
+          <Input
+            label="고객 ID"
+            {...register("id")}
+            disabled
+            error={errors.id?.message}
+          />
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
-            label="고객 성함"
+            label="성함"
             placeholder="홍길동"
-            {...register("customer_name")}
-            error={errors.customer_name?.message}
+            {...register("name")}
+            error={errors.name?.message}
           />
           <Input
             label="휴대폰 번호"
@@ -207,40 +147,18 @@ export default function ClientPage({
             error={errors.phone?.message}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Input
-            label="수량"
-            placeholder="2"
-            {...register("quantity")}
-            error={errors.quantity?.message}
-          />
-          <Input
-            label="판매 가격"
-            placeholder="36000"
-            {...register("customer_price")}
-            error={errors.customer_price?.message}
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Input
-            label="공동현관 출입 비밀번호"
-            placeholder="#1234"
-            {...register("entrance_password")}
-            error={errors.entrance_password?.message}
-          />
-          <Textarea
-            label="메모"
-            placeholder="고객 요청 사항, 특이사항 등"
-            {...register("memo")}
-            error={errors.memo?.message}
-          />
-        </div>
+        <Input
+          label="공동현관 출입 비밀번호"
+          placeholder="#1234"
+          {...register("entrance_password")}
+          error={errors.entrance_password?.message}
+        />
       </section>
 
       <section className="space-y-4">
         <div>
           <Input
-            label="배송지 주소 검색"
+            label="주소 검색"
             {...register("address_text")}
             placeholder="서울특별시 용마산로 616"
             className="w-full"
@@ -300,10 +218,10 @@ export default function ClientPage({
       )}
 
       <Input
-        label="워크스페이스ID"
-        {...register("workspace_id")}
+        label="사용자ID"
+        {...register("user_id")}
         hidden
-        error={errors.workspace_id?.message}
+        error={errors.user_id?.message}
       />
       <Input
         label="위도"
