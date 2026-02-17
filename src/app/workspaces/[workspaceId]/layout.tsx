@@ -50,6 +50,12 @@ export default async function WorkspaceLayout({
               주문관리
             </Link>
             <Link
+              href={`/workspaces/${workspaceId}/customers`}
+              className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+            >
+              고객관리
+            </Link>
+            <Link
               href={`/`}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
