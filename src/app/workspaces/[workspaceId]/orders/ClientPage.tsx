@@ -2,7 +2,7 @@
 
 import dayjs from "dayjs";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/server/Button";
 import Chip from "@/components/server/Chip";
 import type { Order } from "@/services/orders/types";
@@ -100,6 +100,62 @@ export default function ClientPage({ workspaceId }: Props) {
     }
   };
 
+  const downloadLinkRef = useRef<HTMLAnchorElement>(null);
+
+  const handleDownloadCsv = () => {
+    if (orders.length === 0) return;
+    const headers = [
+      "주문ID",
+      "상태",
+      "고객명",
+      "전화번호",
+      "주소",
+      "상세주소",
+      "수량",
+      "판매가격",
+      "공동현관비밀번호",
+      "메모",
+      "생성일시",
+      "수정일시",
+    ];
+
+    const escapeCell = (value: string) => {
+      if (value.includes(",") || value.includes('"') || value.includes("\n")) {
+        return `"${value.replace(/"/g, '""')}"`;
+      }
+      return value;
+    };
+
+    const rows = orders.map((order) => [
+      order.id || "",
+      order.status === "registered" ? "대기" : "완료",
+      order.customer_name || "",
+      order.phone || "",
+      order.address || "",
+      order.address_detail || "",
+      order.quantity || "",
+      order.customer_price || "",
+      order.entrance_password || "",
+      (order.memo || "").replace(/\n/g, " "),
+      order.created_at || "",
+      order.updated_at || "",
+    ]);
+
+    const csv =
+      "\uFEFF" +
+      [headers, ...rows].map((row) => row.map(escapeCell).join(",")).join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = downloadLinkRef.current;
+    if (link) {
+      link.href = url;
+      link.download = `주문목록_${dayjs().format("YYYYMMDD_HHmmss")}.csv`;
+      link.click();
+    }
+    URL.revokeObjectURL(url);
+  };
+
   const sortedAndFilteredOrders = useMemo(() => {
     const result =
       filter === "all"
@@ -130,12 +186,23 @@ export default function ClientPage({ workspaceId }: Props) {
           <Button
             type="button"
             variant="ghost"
+            onClick={handleDownloadCsv}
+            disabled={orders.length === 0}
+          >
+            CSV 다운로드
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
             onClick={handleDeleteAll}
             disabled={isDeleting || orders.length === 0}
             className="text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isDeleting ? "삭제 중..." : "전체 삭제"}
           </Button>
+          {/** biome-ignore lint/a11y/useAnchorContent: <hidden element for download> */}
+          {/** biome-ignore lint/a11y/useValidAnchor: <hidden element for download> */}
+          <a ref={downloadLinkRef} className="hidden" />
         </div>
         <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
           {["all", "registered", "completed"].map((status) => (
