@@ -26,7 +26,8 @@ const create = async (
     customer_name,
     entrance_password,
     memo,
-    phone
+    phone,
+    delivery_day
   ) VALUES (
    ${order.workspace_id},
    ${order.lat},
@@ -38,7 +39,8 @@ const create = async (
    ${order.customer_name},
    ${order.entrance_password},
    ${order.memo},
-   ${order.phone}
+   ${order.phone},
+   ${order.delivery_day || null}
   )`;
 };
 
@@ -60,6 +62,7 @@ const createMany = async (
   const entrancePasswords = orders.map((o) => o.entrance_password);
   const memos = orders.map((o) => o.memo);
   const phones = orders.map((o) => o.phone);
+  const deliveryDays = orders.map((o) => o.delivery_day || null);
 
   return await sql`
     INSERT INTO "order" (
@@ -73,7 +76,8 @@ const createMany = async (
       customer_name,
       entrance_password,
       memo,
-      phone
+      phone,
+      delivery_day
     )
     SELECT *
     FROM UNNEST(
@@ -87,7 +91,8 @@ const createMany = async (
       ${customerNames}::text[],
       ${entrancePasswords}::text[],
       ${memos}::text[],
-      ${phones}::text[]
+      ${phones}::text[],
+      ${deliveryDays}::text[]
     )
   `;
 };
@@ -107,6 +112,7 @@ const modify = async (order: Omit<Order, "">) => {
     , memo = ${order.memo}
     , phone = ${order.phone}
     , status = ${order.status}
+    , delivery_day = ${order.delivery_day || null}
     , updated_at = NOW()
   WHERE id = ${order.id}
   `;

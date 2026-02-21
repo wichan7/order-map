@@ -228,6 +228,23 @@ export default function ClientPage({
             {...register("entrance_password")}
             error={errors.entrance_password?.message}
           />
+          <Select
+            label="배송 요일"
+            options={[
+              { label: "선택 안함", value: "" },
+              { label: "월요일", value: "월요일" },
+              { label: "화요일", value: "화요일" },
+              { label: "수요일", value: "수요일" },
+              { label: "목요일", value: "목요일" },
+              { label: "금요일", value: "금요일" },
+              { label: "토요일", value: "토요일" },
+              { label: "일요일", value: "일요일" },
+            ]}
+            {...register("delivery_day")}
+            error={errors.delivery_day?.message}
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-6">
           <Textarea
             label="메모"
             placeholder="고객 요청 사항, 특이사항 등"

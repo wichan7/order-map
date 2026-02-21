@@ -13,6 +13,7 @@ interface CsvRow {
   quantity?: string;
   customer_price?: string;
   memo?: string;
+  delivery_day?: string;
 }
 
 interface Progress {
@@ -59,6 +60,7 @@ export function useOrderBulkUpload(workspaceId: string) {
             quantity: row.quantity?.trim(),
             customer_price: row.customer_price?.trim(),
             memo: row.memo?.trim(),
+            delivery_day: row.delivery_day?.trim(),
           }))
           .filter((item) => item.address);
 
@@ -126,6 +128,7 @@ export function useOrderBulkUpload(workspaceId: string) {
           quantity: row.quantity,
           customer_price: row.customer_price,
           memo: row.memo,
+          delivery_day: row.delivery_day,
         });
       }
 

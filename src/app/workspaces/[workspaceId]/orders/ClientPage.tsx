@@ -46,6 +46,12 @@ const OrderCard = ({
             <span>{order.phone}</span>
           </p>
         )}
+        {order.delivery_day && (
+          <p className="flex justify-between text-gray-700">
+            <span className="font-medium text-gray-500">배송 요일:</span>
+            <span>{order.delivery_day}</span>
+          </p>
+        )}
         <p className="flex justify-between text-gray-500">
           <span className="font-medium">수정 일시:</span>
           <span>{order.updated_at}</span>
@@ -115,6 +121,7 @@ export default function ClientPage({ workspaceId }: Props) {
       "판매가격",
       "공동현관비밀번호",
       "메모",
+      "배송요일",
       "생성일시",
       "수정일시",
     ];
@@ -137,6 +144,7 @@ export default function ClientPage({ workspaceId }: Props) {
       order.customer_price || "",
       order.entrance_password || "",
       (order.memo || "").replace(/\n/g, " "),
+      order.delivery_day || "",
       order.created_at || "",
       order.updated_at || "",
     ]);
