@@ -42,6 +42,12 @@ const CustomerCard = ({
             <span className="truncate ml-2">{customer.address}</span>
           </p>
         )}
+        {customer.delivery_day && (
+          <p className="flex justify-between text-gray-700">
+            <span className="font-medium text-gray-500">배송 요일:</span>
+            <span>{customer.delivery_day}</span>
+          </p>
+        )}
         {customer.updated_at && (
           <p className="flex justify-between text-gray-500">
             <span className="font-medium">수정 일시:</span>

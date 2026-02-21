@@ -31,7 +31,7 @@ export default function InfoWindowContent({ order }: InfoWindowContentProps) {
         )}
         {order.quantity && <InfoItem label="개수" value={order.quantity} />}
         {order.customer_price && (
-          <InfoItem label="판매 가격" value={order.customer_price} />
+          <InfoItem label="총액" value={order.customer_price} />
         )}
       </div>
 

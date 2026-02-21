@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { TMap } from "@/components/client/TMap";
 import { Button } from "@/components/server/Button";
 import { Input } from "@/components/server/Input";
+import { Select } from "@/components/server/Select";
+import { DELIVERY_DAY_OPTIONS } from "@/core/constants";
 import type { Customer } from "@/services/customers/types";
 import tmapService from "@/services/tmap/service";
 import {
@@ -147,12 +149,20 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
             error={errors.phone?.message}
           />
         </div>
-        <Input
-          label="공동현관 출입 비밀번호"
-          placeholder="#1234"
-          {...register("entrance_password")}
-          error={errors.entrance_password?.message}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Input
+            label="공동현관 출입 비밀번호"
+            placeholder="#1234"
+            {...register("entrance_password")}
+            error={errors.entrance_password?.message}
+          />
+          <Select
+            label="배송 요일"
+            options={DELIVERY_DAY_OPTIONS}
+            {...register("delivery_day")}
+            error={errors.delivery_day?.message}
+          />
+        </div>
       </section>
 
       <section className="space-y-4">

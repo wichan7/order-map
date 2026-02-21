@@ -8,6 +8,7 @@ export type Customer = {
   address_detail?: string;
   lat?: number;
   lng?: number;
+  delivery_day?: string;
   created_at?: string;
   updated_at?: string;
 };

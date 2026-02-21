@@ -16,3 +16,14 @@ export const ORDER_STATUS_OPTIONS: { label: string; value: OrderStatus }[] = [
   { label: "대기", value: ORDER_STATUS.REGISTERED },
   { label: "완료", value: ORDER_STATUS.COMPLETED },
 ];
+
+export const DELIVERY_DAY_OPTIONS: { label: string; value: string }[] = [
+  { label: "선택 안함", value: "" },
+  { label: "월요일", value: "월요일" },
+  { label: "화요일", value: "화요일" },
+  { label: "수요일", value: "수요일" },
+  { label: "목요일", value: "목요일" },
+  { label: "금요일", value: "금요일" },
+  { label: "토요일", value: "토요일" },
+  { label: "일요일", value: "일요일" },
+];

@@ -23,7 +23,8 @@ const create = async (
     address,
     address_detail,
     lat,
-    lng
+    lng,
+    delivery_day
   ) VALUES (
    ${customer.user_id},
    ${customer.name},
@@ -32,7 +33,8 @@ const create = async (
    ${customer.address},
    ${customer.address_detail},
    ${customer.lat},
-   ${customer.lng}
+   ${customer.lng},
+   ${customer.delivery_day || null}
   )`;
 };
 
@@ -46,6 +48,7 @@ const modify = async (customer: Customer) => {
     , address_detail = ${customer.address_detail}
     , lat = ${customer.lat}
     , lng = ${customer.lng}
+    , delivery_day = ${customer.delivery_day || null}
     , updated_at = NOW()
   WHERE id = ${customer.id}
   `;

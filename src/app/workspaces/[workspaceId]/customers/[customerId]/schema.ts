@@ -20,6 +20,7 @@ export const customerFormSchema = z.object({
     .min(-180, "유효한 경도 범위가 아닙니다")
     .max(180, "유효한 경도 범위가 아닙니다")
     .optional(),
+  delivery_day: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
   address_text: z.string().optional(),
