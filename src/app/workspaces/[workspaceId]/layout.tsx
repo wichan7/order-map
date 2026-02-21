@@ -1,3 +1,4 @@
+import { Contact, House, ListOrdered, Map } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import authService from "@/services/auth/service";
@@ -41,25 +42,25 @@ export default async function WorkspaceLayout({
               href={`/workspaces/${workspaceId}/dashboard`}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
-              대시보드
+              <Map />
             </Link>
             <Link
               href={`/workspaces/${workspaceId}/orders`}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
-              주문관리
+              <ListOrdered />
             </Link>
             <Link
               href={`/workspaces/${workspaceId}/customers`}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
-              고객관리
+              <Contact />
             </Link>
             <Link
               href={`/`}
               className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
             >
-              홈
+              <House />
             </Link>
           </div>
         </div>

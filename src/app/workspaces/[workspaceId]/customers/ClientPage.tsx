@@ -84,7 +84,7 @@ export default function ClientPage({ workspaceId, userId }: Props) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div className="flex gap-2">
           <Link href={`/workspaces/${workspaceId}/customers/new`}>
-            <Button type="button">신규 고객 등록</Button>
+            <Button type="button">신규 등록</Button>
           </Link>
         </div>
       </div>

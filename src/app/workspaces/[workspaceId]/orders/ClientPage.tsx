@@ -184,7 +184,7 @@ export default function ClientPage({ workspaceId }: Props) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div className="flex gap-2">
           <Link href={`/workspaces/${workspaceId}/orders/new`}>
-            <Button type="button">신규 주문 등록</Button>
+            <Button type="button">신규 등록</Button>
           </Link>
           <Link href={`/workspaces/${workspaceId}/orders/bulk`}>
             <Button type="button" variant="ghost">
@@ -197,7 +197,7 @@ export default function ClientPage({ workspaceId }: Props) {
             onClick={handleDownloadCsv}
             disabled={orders.length === 0}
           >
-            CSV 다운로드
+            다운로드
           </Button>
           <Button
             type="button"

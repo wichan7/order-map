@@ -112,7 +112,7 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
     >
       <div className="flex justify-between items-center border-b pb-4">
         <h1 className="text-2xl font-bold text-gray-800">
-          {isNew ? "신규 고객 등록" : "고객 상세"}
+          {isNew ? "신규 등록" : "고객 상세"}
         </h1>
         <div className="flex gap-3">
           {!isNew && (
