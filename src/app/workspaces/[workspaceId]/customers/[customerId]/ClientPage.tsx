@@ -151,10 +151,11 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
-            label="공동현관 출입 비밀번호"
-            placeholder="#1234"
-            {...register("entrance_password")}
-            error={errors.entrance_password?.message}
+            label="단가"
+            placeholder="14000"
+            type="number"
+            {...register("unit_price", { valueAsNumber: true })}
+            error={errors.unit_price?.message}
           />
           <Select
             label="배송 요일"
@@ -163,6 +164,12 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
             error={errors.delivery_day?.message}
           />
         </div>
+        <Input
+          label="공동현관 출입 비밀번호"
+          placeholder="#1234"
+          {...register("entrance_password")}
+          error={errors.entrance_password?.message}
+        />
       </section>
 
       <section className="space-y-4">

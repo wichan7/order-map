@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { Textarea } from "@/components/client/Textarea";
@@ -53,7 +53,19 @@ export default function ClientPage({
   const address_text = useWatch({ control, name: "address_text" });
   const lat = useWatch({ control, name: "lat" });
   const lng = useWatch({ control, name: "lng" });
+  const quantity = useWatch({ control, name: "quantity" });
   const router = useRouter();
+
+  const [unitPrice, setUnitPrice] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const qty = Number(quantity);
+    if (qty > 0 && unitPrice && unitPrice > 0) {
+      setValue("customer_price", String(qty * unitPrice), {
+        shouldDirty: true,
+      });
+    }
+  }, [quantity, unitPrice, setValue]);
 
   const onSelectCustomer = (customerId: string) => {
     if (!customerId) {
@@ -88,6 +100,7 @@ export default function ClientPage({
     setValue("delivery_day", selected.delivery_day || "", {
       shouldDirty: true,
     });
+    setUnitPrice(selected.unit_price ?? undefined);
   };
 
   const MemoizedMap = useMemo(() => {
@@ -216,7 +229,7 @@ export default function ClientPage({
             error={errors.phone?.message}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Input
             label="수량"
             placeholder="2"
@@ -224,8 +237,17 @@ export default function ClientPage({
             error={errors.quantity?.message}
           />
           <Input
+            label="단가"
+            placeholder="14000"
+            type="number"
+            value={unitPrice ?? ""}
+            onChange={(e) =>
+              setUnitPrice(e.target.value ? Number(e.target.value) : undefined)
+            }
+          />
+          <Input
             label="총액"
-            placeholder="36000"
+            placeholder="42000"
             {...register("customer_price")}
             error={errors.customer_price?.message}
           />

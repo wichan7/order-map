@@ -42,6 +42,12 @@ const CustomerCard = ({
             <span className="truncate ml-2">{customer.address}</span>
           </p>
         )}
+        {customer.unit_price && (
+          <p className="flex justify-between text-gray-700">
+            <span className="font-medium text-gray-500">단가:</span>
+            <span>{Number(customer.unit_price).toLocaleString()}원</span>
+          </p>
+        )}
         {customer.delivery_day && (
           <p className="flex justify-between text-gray-700">
             <span className="font-medium text-gray-500">배송 요일:</span>
