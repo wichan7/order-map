@@ -10,7 +10,7 @@ import { TMap } from "@/components/client/TMap";
 import { Button } from "@/components/server/Button";
 import { Input } from "@/components/server/Input";
 import { Select } from "@/components/server/Select";
-import { ORDER_STATUS_OPTIONS } from "@/core/constants";
+import { DELIVERY_DAY_OPTIONS, ORDER_STATUS_OPTIONS } from "@/core/constants";
 import type { Customer } from "@/services/customers/types";
 import type { Order } from "@/services/orders/types";
 import tmapService from "@/services/tmap/service";
@@ -76,9 +76,18 @@ export default function ClientPage({
       });
     }
     if (selected.lat && selected.lng) {
-      setValue("lat", selected.lat, { shouldValidate: true, shouldDirty: true });
-      setValue("lng", selected.lng, { shouldValidate: true, shouldDirty: true });
+      setValue("lat", selected.lat, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+      setValue("lng", selected.lng, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
+    setValue("delivery_day", selected.delivery_day || "", {
+      shouldDirty: true,
+    });
   };
 
   const MemoizedMap = useMemo(() => {
@@ -215,7 +224,7 @@ export default function ClientPage({
             error={errors.quantity?.message}
           />
           <Input
-            label="판매 가격"
+            label="총액"
             placeholder="36000"
             {...register("customer_price")}
             error={errors.customer_price?.message}
@@ -230,16 +239,7 @@ export default function ClientPage({
           />
           <Select
             label="배송 요일"
-            options={[
-              { label: "선택 안함", value: "" },
-              { label: "월요일", value: "월요일" },
-              { label: "화요일", value: "화요일" },
-              { label: "수요일", value: "수요일" },
-              { label: "목요일", value: "목요일" },
-              { label: "금요일", value: "금요일" },
-              { label: "토요일", value: "토요일" },
-              { label: "일요일", value: "일요일" },
-            ]}
+            options={DELIVERY_DAY_OPTIONS}
             {...register("delivery_day")}
             error={errors.delivery_day?.message}
           />

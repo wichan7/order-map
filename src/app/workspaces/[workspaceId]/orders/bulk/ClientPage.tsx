@@ -100,7 +100,7 @@ export default function ClientPage({ workspaceId }: { workspaceId: string }) {
                   <th className="border p-2 text-left">상세 주소</th>
                   <th className="border p-2 text-left">현관 출입 번호</th>
                   <th className="border p-2 text-left">수량</th>
-                  <th className="border p-2 text-left">판매 가격</th>
+                  <th className="border p-2 text-left">총액</th>
                   <th className="border p-2 text-left">메모</th>
                 </tr>
               </thead>
