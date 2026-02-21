@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { TMap } from "@/components/client/TMap";
@@ -59,16 +60,30 @@ export default function ClientPage({ workspaceId }: Props) {
   return (
     <div className="flex flex-col h-full">
       <aside className="h-10 flex gap-2 always-scrollbar-x">
-        {orders.map((order) => (
-          <button
-            type="button"
-            className="flex-shrink-0"
-            key={order.id}
-            onClick={() => handleClickChip(order)}
-          >
-            <Chip>{order.address}</Chip>
-          </button>
-        ))}
+        {orders
+          .sort(
+            (a, b) =>
+              (a.status === "registered" ? 0 : 1) -
+              (b.status === "registered" ? 0 : 1),
+          )
+          .map((order) => (
+            <button
+              type="button"
+              className="flex-shrink-0"
+              key={order.id}
+              onClick={() => handleClickChip(order)}
+            >
+              <Chip
+                className={clsx(
+                  "text-slate-50 font-bold",
+                  order.status === "registered" && "bg-sky-600",
+                  order.status === "completed" && "bg-yellow-500",
+                )}
+              >
+                {order.address}
+              </Chip>
+            </button>
+          ))}
       </aside>
       <TMap
         className="flex-1"

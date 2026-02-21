@@ -42,6 +42,18 @@ const CustomerCard = ({
             <span className="truncate ml-2">{customer.address}</span>
           </p>
         )}
+        {customer.unit_price && (
+          <p className="flex justify-between text-gray-700">
+            <span className="font-medium text-gray-500">단가:</span>
+            <span>{Number(customer.unit_price).toLocaleString()}원</span>
+          </p>
+        )}
+        {customer.delivery_day && (
+          <p className="flex justify-between text-gray-700">
+            <span className="font-medium text-gray-500">배송 요일:</span>
+            <span>{customer.delivery_day}</span>
+          </p>
+        )}
         {customer.updated_at && (
           <p className="flex justify-between text-gray-500">
             <span className="font-medium">수정 일시:</span>
@@ -72,7 +84,7 @@ export default function ClientPage({ workspaceId, userId }: Props) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div className="flex gap-2">
           <Link href={`/workspaces/${workspaceId}/customers/new`}>
-            <Button type="button">신규 고객 등록</Button>
+            <Button type="button">신규 등록</Button>
           </Link>
         </div>
       </div>

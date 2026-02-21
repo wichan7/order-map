@@ -12,6 +12,7 @@ export type Order = {
   entrance_password?: string;
   memo?: string;
   status?: "registered" | "completed";
+  delivery_day?: string;
   created_at?: string;
   updated_at?: string;
 };

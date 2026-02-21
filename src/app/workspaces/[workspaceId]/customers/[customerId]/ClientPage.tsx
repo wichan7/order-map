@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { TMap } from "@/components/client/TMap";
 import { Button } from "@/components/server/Button";
 import { Input } from "@/components/server/Input";
+import { Select } from "@/components/server/Select";
+import { DELIVERY_DAY_OPTIONS } from "@/core/constants";
 import type { Customer } from "@/services/customers/types";
 import tmapService from "@/services/tmap/service";
 import {
@@ -110,7 +112,7 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
     >
       <div className="flex justify-between items-center border-b pb-4">
         <h1 className="text-2xl font-bold text-gray-800">
-          {isNew ? "신규 고객 등록" : "고객 상세"}
+          {isNew ? "신규 등록" : "고객 상세"}
         </h1>
         <div className="flex gap-3">
           {!isNew && (
@@ -145,6 +147,21 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
             placeholder="01012345678"
             {...register("phone")}
             error={errors.phone?.message}
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Input
+            label="단가"
+            placeholder="14000"
+            type="number"
+            {...register("unit_price", { valueAsNumber: true })}
+            error={errors.unit_price?.message}
+          />
+          <Select
+            label="배송 요일"
+            options={DELIVERY_DAY_OPTIONS}
+            {...register("delivery_day")}
+            error={errors.delivery_day?.message}
           />
         </div>
         <Input

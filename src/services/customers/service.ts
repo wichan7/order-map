@@ -6,9 +6,9 @@ const get = async (userId: string) => {
 };
 
 const getOneById = async (customerId: string) => {
-  return (await sql`SELECT * FROM "customer" WHERE id = ${customerId} LIMIT 1`)[0] as
-    | Customer
-    | undefined;
+  return (
+    await sql`SELECT * FROM "customer" WHERE id = ${customerId} LIMIT 1`
+  )[0] as Customer | undefined;
 };
 
 const create = async (
@@ -23,7 +23,9 @@ const create = async (
     address,
     address_detail,
     lat,
-    lng
+    lng,
+    unit_price,
+    delivery_day
   ) VALUES (
    ${customer.user_id},
    ${customer.name},
@@ -32,7 +34,9 @@ const create = async (
    ${customer.address},
    ${customer.address_detail},
    ${customer.lat},
-   ${customer.lng}
+   ${customer.lng},
+   ${customer.unit_price},
+   ${customer.delivery_day}
   )`;
 };
 
@@ -46,6 +50,8 @@ const modify = async (customer: Customer) => {
     , address_detail = ${customer.address_detail}
     , lat = ${customer.lat}
     , lng = ${customer.lng}
+    , unit_price = ${customer.unit_price}
+    , delivery_day = ${customer.delivery_day}
     , updated_at = NOW()
   WHERE id = ${customer.id}
   `;

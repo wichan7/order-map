@@ -25,6 +25,7 @@ export const orderFormSchema = z.object({
   entrance_password: z.string().optional(),
   memo: z.string().optional(),
   status: z.enum(Object.values(ORDER_STATUS)).optional(),
+  delivery_day: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
   address_text: z.string().optional(),
