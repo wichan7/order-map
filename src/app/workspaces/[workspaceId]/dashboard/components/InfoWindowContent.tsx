@@ -22,6 +22,9 @@ export default function InfoWindowContent({ order }: InfoWindowContentProps) {
           <InfoItem label="이름" value={order.customer_name} />
         )}
         {order.phone && <InfoItem label="전화번호" value={order.phone} />}
+        {order.delivery_day && (
+          <InfoItem label="배송 요일" value={order.delivery_day} />
+        )}
         {order.address && <InfoItem label="주소" value={order.address} />}
         {order.address_detail && (
           <InfoItem label="상세 주소" value={order.address_detail} />
@@ -34,7 +37,6 @@ export default function InfoWindowContent({ order }: InfoWindowContentProps) {
           <InfoItem label="총액" value={order.customer_price} />
         )}
       </div>
-
       {order.memo && (
         <div className="px-4 pt-2 pb-4 border-t border-gray-100">
           <div className="text-gray-600 bg-gray-50 p-2 rounded max-h-20 overflow-y-auto whitespace-pre-wrap">

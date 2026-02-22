@@ -48,6 +48,8 @@ export default function ClientPage({
       ...order,
       workspace_id: workspaceId,
     },
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const address_text = useWatch({ control, name: "address_text" });
@@ -62,7 +64,7 @@ export default function ClientPage({
     const qty = Number(quantity);
     if (qty > 0 && unitPrice && unitPrice > 0) {
       setValue("customer_price", String(qty * unitPrice), {
-        shouldDirty: true,
+        shouldValidate: true,
       });
     }
   }, [quantity, unitPrice, setValue]);
@@ -74,31 +76,31 @@ export default function ClientPage({
     const selected = customers.find((c) => c.id === customerId);
     if (!selected) return;
 
-    setValue("customer_name", selected.name || "", { shouldDirty: true });
-    setValue("phone", selected.phone || "", { shouldDirty: true });
+    setValue("customer_name", selected.name || "", { shouldValidate: true });
+    setValue("phone", selected.phone || "", { shouldValidate: true });
     setValue("entrance_password", selected.entrance_password || "", {
-      shouldDirty: true,
+      shouldValidate: true,
     });
     if (selected.address) {
-      setValue("address", selected.address, { shouldDirty: true });
+      setValue("address", selected.address, {
+        shouldValidate: true,
+      });
     }
     if (selected.address_detail) {
       setValue("address_detail", selected.address_detail, {
-        shouldDirty: true,
+        shouldValidate: true,
       });
     }
     if (selected.lat && selected.lng) {
       setValue("lat", selected.lat, {
         shouldValidate: true,
-        shouldDirty: true,
       });
       setValue("lng", selected.lng, {
         shouldValidate: true,
-        shouldDirty: true,
       });
     }
-    setValue("delivery_day", selected.delivery_day || "", {
-      shouldDirty: true,
+    setValue("delivery_day", selected.delivery_day, {
+      shouldValidate: true,
     });
     setUnitPrice(selected.unit_price ?? undefined);
   };
