@@ -40,6 +40,8 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
       ...customer,
       user_id: userId,
     },
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const address_text = useWatch({ control, name: "address_text" });
