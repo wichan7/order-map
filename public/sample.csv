@@ -1,4 +1,4 @@
-customer_name,phone,address,address_detail,entrance_password,quantity,customer_price,delivery_day,memo
+﻿customer_name,phone,address,address_detail,entrance_password,quantity,customer_price,delivery_day,memo
 홍길동,0,우남 101-602,,#1234,1,14000,월요일,"10월 부터 매달 1년간
 20일이 있는주"
 홍길동,1012345678,중화동 / 중랑역로 78,1층,#5678,2,28000,화요일,매주 1판
