@@ -101,6 +101,7 @@ export default function ClientPage({ workspaceId }: { workspaceId: string }) {
                   <th className="border p-2 text-left">현관 출입 번호</th>
                   <th className="border p-2 text-left">수량</th>
                   <th className="border p-2 text-left">총액</th>
+                  <th className="border p-2 text-left">요일</th>
                   <th className="border p-2 text-left">메모</th>
                 </tr>
               </thead>
@@ -119,6 +120,7 @@ export default function ClientPage({ workspaceId }: { workspaceId: string }) {
                     </td>
                     <td className="border p-2">{row.quantity || "-"}</td>
                     <td className="border p-2">{row.customer_price || "-"}</td>
+                    <td className="border p-2">{row.delivery_day || "-"}</td>
                     <td className="border p-2">{row.memo || "-"}</td>
                   </tr>
                 ))}
