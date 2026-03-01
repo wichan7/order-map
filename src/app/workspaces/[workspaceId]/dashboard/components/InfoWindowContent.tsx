@@ -23,7 +23,10 @@ export default function InfoWindowContent({ order }: InfoWindowContentProps) {
         )}
         {order.phone && <InfoItem label="전화번호" value={order.phone} />}
         {order.delivery_day && (
-          <InfoItem label="배송 요일" value={order.delivery_day} />
+          <InfoItem
+            label="배송 요일"
+            value={<span className="font-bold text-base">{order.delivery_day}</span>}
+          />
         )}
         {order.address && <InfoItem label="주소" value={order.address} />}
         {order.address_detail && (
