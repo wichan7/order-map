@@ -190,10 +190,12 @@ export default function ClientPage({
             label="고객 선택"
             options={[
               { label: "선택 안함 (직접 입력)", value: "" },
-              ...customers.map((c) => ({
-                label: `${c.name}${c.phone ? ` (${c.phone})` : ""}`,
-                value: c.id!,
-              })),
+              ...customers
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((c) => ({
+                  label: `${c.name}${c.phone ? ` (${c.phone})` : ""}`,
+                  value: c.id!,
+                })),
             ]}
             onChange={(e) => onSelectCustomer(e.target.value)}
           />
