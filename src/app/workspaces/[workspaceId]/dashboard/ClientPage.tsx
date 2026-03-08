@@ -7,6 +7,7 @@ import { TMap } from "@/components/client/TMap";
 import Chip from "@/components/server/Chip";
 import type { Order } from "@/services/orders/types";
 import type { TMapInstance } from "@/types/tmap";
+import { extractNumber } from "@/utils/render";
 import { getOrdersAction, modifyOrderAction } from "../orders/actions";
 import InfoWindow from "./components/InfoWindow";
 import OrderStats from "./components/OrderStats";
@@ -63,6 +64,14 @@ export default function ClientPage({ workspaceId }: Props) {
     (o) => o.status === "registered",
   ).length;
 
+  const totalQuantity = orders.reduce((sum, o) => sum + extractNumber(o.quantity), 0);
+  const completedQuantity = orders
+    .filter((o) => o.status === "completed")
+    .reduce((sum, o) => sum + extractNumber(o.quantity), 0);
+  const registeredQuantity = orders
+    .filter((o) => o.status === "registered")
+    .reduce((sum, o) => sum + extractNumber(o.quantity), 0);
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex gap-4 items-center h-10 border-b border-slate-200">
@@ -70,33 +79,10 @@ export default function ClientPage({ workspaceId }: Props) {
           total={orders.length}
           completed={completedCount}
           registered={registeredCount}
+          totalQuantity={totalQuantity}
+          completedQuantity={completedQuantity}
+          registeredQuantity={registeredQuantity}
         />
-        <aside className="flex-1 flex gap-2 overflow-x-auto h-full items-center">
-          {orders
-            .sort(
-              (a, b) =>
-                (a.status === "registered" ? 0 : 1) -
-                (b.status === "registered" ? 0 : 1),
-            )
-            .map((order) => (
-              <button
-                type="button"
-                className="flex-shrink-0"
-                key={order.id}
-                onClick={() => handleClickChip(order)}
-              >
-                <Chip
-                  className={clsx(
-                    "text-slate-50 font-bold",
-                    order.status === "registered" && "bg-sky-600",
-                    order.status === "completed" && "bg-yellow-500",
-                  )}
-                >
-                  {order.address}
-                </Chip>
-              </button>
-            ))}
-        </aside>
       </div>
       <TMap
         className="flex-1"
