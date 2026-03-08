@@ -9,6 +9,7 @@ import type { Order } from "@/services/orders/types";
 import type { TMapInstance } from "@/types/tmap";
 import { getOrdersAction, modifyOrderAction } from "../orders/actions";
 import InfoWindow from "./components/InfoWindow";
+import OrderStats from "./components/OrderStats";
 
 interface Props {
   workspaceId: string;
@@ -57,34 +58,46 @@ export default function ClientPage({ workspaceId }: Props) {
     );
   };
 
+  const completedCount = orders.filter((o) => o.status === "completed").length;
+  const registeredCount = orders.filter(
+    (o) => o.status === "registered",
+  ).length;
+
   return (
     <div className="flex flex-col h-full">
-      <aside className="h-10 flex gap-2 always-scrollbar-x">
-        {orders
-          .sort(
-            (a, b) =>
-              (a.status === "registered" ? 0 : 1) -
-              (b.status === "registered" ? 0 : 1),
-          )
-          .map((order) => (
-            <button
-              type="button"
-              className="flex-shrink-0"
-              key={order.id}
-              onClick={() => handleClickChip(order)}
-            >
-              <Chip
-                className={clsx(
-                  "text-slate-50 font-bold",
-                  order.status === "registered" && "bg-sky-600",
-                  order.status === "completed" && "bg-yellow-500",
-                )}
+      <div className="flex gap-4 items-center h-10 border-b border-slate-200">
+        <OrderStats
+          total={orders.length}
+          completed={completedCount}
+          registered={registeredCount}
+        />
+        <aside className="flex-1 flex gap-2 overflow-x-auto h-full items-center">
+          {orders
+            .sort(
+              (a, b) =>
+                (a.status === "registered" ? 0 : 1) -
+                (b.status === "registered" ? 0 : 1),
+            )
+            .map((order) => (
+              <button
+                type="button"
+                className="flex-shrink-0"
+                key={order.id}
+                onClick={() => handleClickChip(order)}
               >
-                {order.address}
-              </Chip>
-            </button>
-          ))}
-      </aside>
+                <Chip
+                  className={clsx(
+                    "text-slate-50 font-bold",
+                    order.status === "registered" && "bg-sky-600",
+                    order.status === "completed" && "bg-yellow-500",
+                  )}
+                >
+                  {order.address}
+                </Chip>
+              </button>
+            ))}
+        </aside>
+      </div>
       <TMap
         className="flex-1"
         markerList={Object.values(groupedOrders).map((orderGroup) => {
