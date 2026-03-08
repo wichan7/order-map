@@ -1,3 +1,8 @@
+export const extractNumber = (value: string | undefined) => {
+  const match = (value ?? "").match(/\d+/);
+  return match ? parseInt(match[0]) : 0;
+};
+
 export const renderWithBreaks = (text: string | undefined | null) => {
   if (!text) return null;
 
