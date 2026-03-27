@@ -74,6 +74,7 @@ export default function ClientPage({ workspaceId }: Props) {
   const [filter, setFilter] = useState<"all" | "registered" | "completed">(
     "all",
   );
+  const [search, setSearch] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   const loadOrders = useCallback(async () => {
@@ -165,17 +166,23 @@ export default function ClientPage({ workspaceId }: Props) {
   };
 
   const sortedAndFilteredOrders = useMemo(() => {
-    const result =
-      filter === "all"
-        ? orders
-        : orders.filter((order) => order.status === filter);
+    const q = search.trim().toLowerCase();
+    const result = orders.filter((order) => {
+      if (filter !== "all" && order.status !== filter) return false;
+      if (!q) return true;
+      return (
+        order.address?.toLowerCase().includes(q) ||
+        order.customer_name?.toLowerCase().includes(q) ||
+        order.phone?.toLowerCase().includes(q)
+      );
+    });
 
     result.sort(
       (a, b) => dayjs(b.updated_at).unix() - dayjs(a.updated_at).unix(),
     );
 
     return result;
-  }, [orders, filter]);
+  }, [orders, filter, search]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -234,6 +241,14 @@ export default function ClientPage({ workspaceId }: Props) {
           ))}
         </div>
       </div>
+
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="주소, 고객명, 전화번호 검색..."
+        className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
 
       {sortedAndFilteredOrders.length === 0 ? (
         <div className="text-center p-10 bg-gray-50 rounded-xl mt-6">

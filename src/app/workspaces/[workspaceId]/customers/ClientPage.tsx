@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/server/Button";
 import type { Customer } from "@/services/customers/types";
 import { getCustomersAction } from "./actions";
@@ -67,6 +67,7 @@ const CustomerCard = ({
 
 export default function ClientPage({ workspaceId, userId }: Props) {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [search, setSearch] = useState("");
 
   const loadCustomers = useCallback(async () => {
     const result = await getCustomersAction(userId);
@@ -76,6 +77,17 @@ export default function ClientPage({ workspaceId, userId }: Props) {
   useEffect(() => {
     loadCustomers();
   }, [loadCustomers]);
+
+  const filteredCustomers = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return customers;
+    return customers.filter(
+      (c) =>
+        c.name?.toLowerCase().includes(q) ||
+        c.phone?.toLowerCase().includes(q) ||
+        c.address?.toLowerCase().includes(q),
+    );
+  }, [customers, search]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -89,13 +101,25 @@ export default function ClientPage({ workspaceId, userId }: Props) {
         </div>
       </div>
 
-      {customers.length === 0 ? (
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="이름, 전화번호, 주소 검색..."
+        className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+      {filteredCustomers.length === 0 ? (
         <div className="text-center p-10 bg-gray-50 rounded-xl mt-6">
-          <p className="text-xl text-gray-500">등록된 고객이 없습니다.</p>
+          <p className="text-xl text-gray-500">
+            {customers.length === 0
+              ? "등록된 고객이 없습니다."
+              : "검색 결과가 없습니다."}
+          </p>
         </div>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {customers.map((customer) => (
+          {filteredCustomers.map((customer) => (
             <CustomerCard
               key={customer.id}
               customer={customer}
