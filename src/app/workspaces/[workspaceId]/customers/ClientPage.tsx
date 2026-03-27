@@ -70,7 +70,7 @@ export default function ClientPage({ workspaceId, userId }: Props) {
 
   const loadCustomers = useCallback(async () => {
     const result = await getCustomersAction(userId);
-    setCustomers(result);
+    setCustomers([...result].sort((a, b) => a.name.localeCompare(b.name, "ko")));
   }, [userId]);
 
   useEffect(() => {
