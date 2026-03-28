@@ -33,6 +33,10 @@ const getAll = async (userId: string) => {
   return result;
 };
 
-const workspaceService = { getOneById, getOneByNm, create, getAll };
+const updateMemo = async (id: Workspace["id"], memo: string) => {
+  await sql`UPDATE workspace SET memo = ${memo} WHERE id = ${id}`;
+};
+
+const workspaceService = { getOneById, getOneByNm, create, getAll, updateMemo };
 
 export default workspaceService;

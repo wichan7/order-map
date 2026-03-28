@@ -1,25 +1,42 @@
 "use client";
 
-import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TMap } from "@/components/client/TMap";
 import Chip from "@/components/server/Chip";
 import type { Order } from "@/services/orders/types";
 import type { TMapInstance } from "@/types/tmap";
+import { debounce } from "@/utils/debounce";
 import { extractNumber } from "@/utils/render";
+import { updateWorkspaceMemoAction } from "../actions";
 import { getOrdersAction, modifyOrderAction } from "../orders/actions";
 import InfoWindow from "./components/InfoWindow";
 import OrderStats from "./components/OrderStats";
 
 interface Props {
   workspaceId: string;
+  initialMemo: string;
 }
 
-export default function ClientPage({ workspaceId }: Props) {
-  const [map, setMap] = useState<TMapInstance | null>(null);
+export default function ClientPage({ workspaceId, initialMemo }: Props) {
+  const [_, setMap] = useState<TMapInstance | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<Order[]>([]);
+  const [memo, setMemo] = useState(initialMemo);
+
+  const saveMemo = useMemo(
+    () =>
+      debounce(
+        (value: string) => updateWorkspaceMemoAction(workspaceId, value),
+        800,
+      ),
+    [workspaceId],
+  );
+
+  const handleMemoChange = (value: string) => {
+    setMemo(value);
+    saveMemo(value);
+  };
   const router = useRouter();
 
   useEffect(() => {
@@ -37,12 +54,6 @@ export default function ClientPage({ workspaceId }: Props) {
     },
     {} as Record<string, Order[]>,
   );
-
-  const handleClickChip = ({ lat, lng }: Order) => {
-    map.setCenter(new Tmapv3.LatLng(lat, lng));
-    map.setZoom(16);
-  };
-
   const handleStatusChange = async (updatedOrder: Order) => {
     await modifyOrderAction(updatedOrder);
 
@@ -64,7 +75,10 @@ export default function ClientPage({ workspaceId }: Props) {
     (o) => o.status === "registered",
   ).length;
 
-  const totalQuantity = orders.reduce((sum, o) => sum + extractNumber(o.quantity), 0);
+  const totalQuantity = orders.reduce(
+    (sum, o) => sum + extractNumber(o.quantity),
+    0,
+  );
   const completedQuantity = orders
     .filter((o) => o.status === "completed")
     .reduce((sum, o) => sum + extractNumber(o.quantity), 0);
@@ -83,6 +97,14 @@ export default function ClientPage({ workspaceId }: Props) {
           completedQuantity={completedQuantity}
           registeredQuantity={registeredQuantity}
         />
+        <div className="ml-auto flex items-center gap-2 px-4 border-l border-slate-200 h-full">
+          <input
+            className="text-sm bg-transparent outline-none text-slate-700 placeholder:text-slate-300 w-64"
+            placeholder="워크스페이스 메모를 입력하세요"
+            value={memo}
+            onChange={(e) => handleMemoChange(e.target.value)}
+          />
+        </div>
       </div>
       <TMap
         className="flex-1"
