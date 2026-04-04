@@ -27,7 +27,7 @@ const OrderCard = ({
     <li className="bg-white p-5 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 group cursor-pointer">
       <div className="flex justify-between items-start mb-3 border-b pb-2">
         <h2 className="text-lg font-bold text-blue-600 group-hover:text-blue-700 truncate mr-4">
-          {order.address || "주소 정보 없음"}
+          {order.customer_name || "이름 정보 없음"}
         </h2>
         <Chip
           size="small"

@@ -22,6 +22,7 @@ export const customerFormSchema = z.object({
     .optional(),
   unit_price: z.number().min(0).optional(),
   delivery_day: z.string().optional(),
+  memo: z.string().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
   address_text: z.string().optional(),

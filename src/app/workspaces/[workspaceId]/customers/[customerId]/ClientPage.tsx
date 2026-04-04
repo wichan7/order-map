@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
+import { Textarea } from "@/components/client/Textarea";
 import { TMap } from "@/components/client/TMap";
 import { Button } from "@/components/server/Button";
 import { Input } from "@/components/server/Input";
@@ -171,6 +172,12 @@ export default function ClientPage({ isNew, customer, userId }: Props) {
           placeholder="#1234"
           {...register("entrance_password")}
           error={errors.entrance_password?.message}
+        />
+        <Textarea
+          label="메모"
+          placeholder="고객 요청 사항, 특이사항 등"
+          {...register("memo")}
+          error={errors.memo?.message}
         />
       </section>
 

@@ -10,6 +10,7 @@ export type Customer = {
   lng?: number;
   unit_price?: number;
   delivery_day?: string;
+  memo?: string;
   created_at?: string;
   updated_at?: string;
 };
