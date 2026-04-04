@@ -102,6 +102,7 @@ export default function ClientPage({
     setValue("delivery_day", selected.delivery_day, {
       shouldValidate: true,
     });
+    setValue("memo", selected.memo || "", { shouldValidate: true });
     setUnitPrice(selected.unit_price ?? undefined);
   };
 
