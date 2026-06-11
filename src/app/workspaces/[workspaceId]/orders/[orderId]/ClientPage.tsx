@@ -9,6 +9,7 @@ import { Textarea } from "@/components/client/Textarea";
 import { TMap } from "@/components/client/TMap";
 import { Button } from "@/components/server/Button";
 import { Input } from "@/components/server/Input";
+import { SearchableCombobox } from "@/components/client/SearchableCombobox";
 import { Select } from "@/components/server/Select";
 import { DELIVERY_DAY_OPTIONS, ORDER_STATUS_OPTIONS } from "@/core/constants";
 import type { Customer } from "@/services/customers/types";
@@ -187,18 +188,16 @@ export default function ClientPage({
 
       {isNew && customers.length > 0 && (
         <section>
-          <Select
+          <SearchableCombobox
             label="고객 선택"
-            options={[
-              { label: "선택 안함 (직접 입력)", value: "" },
-              ...customers
-                .sort((a, b) => a.name.localeCompare(b.name))
-                .map((c) => ({
-                  label: `${c.name}${c.phone ? ` (${c.phone})` : ""}`,
-                  value: c.id!,
-                })),
-            ]}
-            onChange={(e) => onSelectCustomer(e.target.value)}
+            placeholder="이름 또는 전화번호로 검색..."
+            options={customers
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((c) => ({
+                label: `${c.name}${c.phone ? ` (${c.phone})` : ""}`,
+                value: c.id!,
+              }))}
+            onChange={(value) => onSelectCustomer(value)}
           />
         </section>
       )}
