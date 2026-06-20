@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { TMap } from "@/components/client/TMap";
-import Chip from "@/components/server/Chip";
 import type { Order } from "@/services/orders/types";
 import type { TMapInstance } from "@/types/tmap";
 import { debounce } from "@/utils/debounce";
@@ -17,6 +16,68 @@ interface Props {
   workspaceId: string;
   initialMemo: string;
 }
+
+const COMPLETED_MARKER_COLOR = "#eab308";
+const UNKNOWN_DELIVERY_DAY_COLOR = "#64748b";
+
+const DELIVERY_DAY_COLORS = [
+  {
+    label: "월",
+    color: "#0072b2",
+    textColor: "#ffffff",
+    aliases: ["월", "월요일"],
+  },
+  {
+    label: "화",
+    color: "#e69f00",
+    textColor: "#111827",
+    aliases: ["화", "화요일"],
+  },
+  {
+    label: "수",
+    color: "#5b2a86",
+    textColor: "#ffffff",
+    aliases: ["수", "수요일"],
+  },
+  {
+    label: "목",
+    color: "#56b4e9",
+    textColor: "#111827",
+    aliases: ["목", "목요일"],
+  },
+  {
+    label: "금",
+    color: "#d55e00",
+    textColor: "#ffffff",
+    aliases: ["금", "금요일"],
+  },
+  {
+    label: "토",
+    color: "#000000",
+    textColor: "#ffffff",
+    aliases: ["토", "토요일"],
+  },
+  {
+    label: "일",
+    color: "#f0e442",
+    textColor: "#111827",
+    aliases: ["일", "일요일"],
+  },
+];
+
+const getDeliveryDayStyle = (deliveryDay?: string) => {
+  const normalizedDeliveryDay = deliveryDay?.trim();
+
+  if (!normalizedDeliveryDay) {
+    return { color: UNKNOWN_DELIVERY_DAY_COLOR, textColor: "#ffffff" };
+  }
+
+  return (
+    DELIVERY_DAY_COLORS.find((day) =>
+      day.aliases.some((alias) => normalizedDeliveryDay.includes(alias)),
+    ) || { color: UNKNOWN_DELIVERY_DAY_COLOR, textColor: "#ffffff" }
+  );
+};
 
 export default function ClientPage({ workspaceId, initialMemo }: Props) {
   const [_, setMap] = useState<TMapInstance | null>(null);
@@ -111,29 +172,33 @@ export default function ClientPage({ workspaceId, initialMemo }: Props) {
         markerList={Object.values(groupedOrders).map((orderGroup) => {
           const firstOrder = orderGroup[0];
           const hasMultiple = orderGroup.length > 1;
-          const hasRegistered = orderGroup.some(
+          const firstRegisteredOrder = orderGroup.find(
             (o) => o.status === "registered",
           );
-          const statusColor = hasRegistered ? "bg-sky-600" : "bg-yellow-500";
+          const hasRegistered = Boolean(firstRegisteredOrder);
+          const markerStyle = hasRegistered
+            ? getDeliveryDayStyle(firstRegisteredOrder?.delivery_day)
+            : { color: COMPLETED_MARKER_COLOR, textColor: "#111827" };
           const statusText = hasRegistered ? "대기" : "완료";
-          const borderColor = hasRegistered
-            ? "border-t-sky-600"
-            : "border-t-yellow-500";
 
           return {
             content: (
               <div className="relative">
-                <Chip
-                  size="small"
-                  className={`${statusColor} text-slate-50 font-bold`}
+                <div
+                  className="truncate px-3 py-1 rounded-full text-xs font-bold"
+                  style={{
+                    backgroundColor: markerStyle.color,
+                    color: markerStyle.textColor,
+                  }}
                 >
                   {hasMultiple ? `${orderGroup.length}건` : statusText}
-                </Chip>
+                </div>
                 <div
-                  className={`absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px] ${borderColor}`}
+                  className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-r-[8px] border-t-[12px]"
                   style={{
                     borderLeftColor: "transparent",
                     borderRightColor: "transparent",
+                    borderTopColor: markerStyle.color,
                   }}
                 />
               </div>
@@ -144,6 +209,25 @@ export default function ClientPage({ workspaceId, initialMemo }: Props) {
         })}
         onMapLoaded={setMap}
       />
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 border-t border-slate-200 bg-white text-xs text-slate-600">
+        <span className="font-semibold text-slate-700">미완료 요일 색상</span>
+        {DELIVERY_DAY_COLORS.map((day) => (
+          <span key={day.label} className="flex items-center gap-1.5">
+            <span
+              className="h-3 w-3 rounded-full"
+              style={{ backgroundColor: day.color }}
+            />
+            {day.label}
+          </span>
+        ))}
+        <span className="flex items-center gap-1.5">
+          <span
+            className="h-3 w-3 rounded-full"
+            style={{ backgroundColor: UNKNOWN_DELIVERY_DAY_COLOR }}
+          />
+          미지정
+        </span>
+      </div>
       {selectedOrders.length > 0 && (
         <InfoWindow
           orderList={selectedOrders}
